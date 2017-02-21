@@ -3,6 +3,9 @@ package com.treelogic.proteus.kafka.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect
 
 public class CoilTimeSeriesPojo<T> implements Serializable {
 
@@ -13,27 +16,30 @@ public class CoilTimeSeriesPojo<T> implements Serializable {
 
 
 	private static final long serialVersionUID = 6378407206315300334L;
-	
-	
-	public Date timestamp;
+
+	public Date date;
+	public Date getDate() {
+		return date;
+	}
+
 	public T id;
     public T positionX;
     public T positionY;
 
-    public T C0001, C0002, C0003, C0004, C0005, C0006, C0007, C0008, C0009, C0010;
-    public T C0011, C0012, C0013, C0014, C0015, C0016, C0017, C0018, C0019, C0020;
-    public T C0021, C0022, C0023, C0024, C0025, C0026, C0027, C0028, C0029, C0030;
-    public T C0031, C0032, C0033, C0034, C0035, C0036, C0037, C0038, C0039, C0040;
-    public T C0041, C0042, C0043;
+    private T C0001, C0002, C0003, C0004, C0005, C0006, C0007, C0008, C0009, C0010;
+    private T C0011, C0012, C0013, C0014, C0015, C0016, C0017, C0018, C0019, C0020;
+    private T C0021, C0022, C0023, C0024, C0025, C0026, C0027, C0028, C0029, C0030;
+    private T C0031, C0032, C0033, C0034, C0035, C0036, C0037, C0038, C0039, C0040;
+    private T C0041, C0042, C0043;
 
-    public T C0045, C0048, C0049, C0055, C0044, C0046;
+    private T C0045, C0048, C0049, C0055, C0044, C0046;
 
 
     public CoilTimeSeriesPojo(){
-    	timestamp = new Date();    }
+    	date = new Date();    }
 
     public CoilTimeSeriesPojo(T v, T v1, T v2, T v3, T v4, T v5, T v6, T v7, T v8, T v9, T v10, T v11, T v12, T v13, T v14, T v15, T v16, T v17, T v18, T v19, T v20, T v21, T v22, T v23, T v24, T v25, T v26, T v27, T v28, T v29, T v30, T v31, T v32, T v33, T v34, T v35, T v36, T v37, T v38, T v39, T v40, T v41, T v42, T v43, T v44, T v45) {
-        timestamp = new Date();
+        date = new Date();
     	id = v;
         positionX = v1;
         positionY = v2;

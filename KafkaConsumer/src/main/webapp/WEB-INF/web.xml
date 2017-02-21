@@ -2,12 +2,12 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
   <display-name>proteus-websocket-endpoint</display-name>
   <welcome-file-list>
-    <welcome-file>inddddddex.html</welcome-file>
-    <welcome-file>inddddddex.htm</welcome-file>
-    <welcome-file>inddddddex.jsp</welcome-file>
-    <welcome-file>inddddddex.html</welcome-file>
-    <welcome-file>inddddddex.htm</welcome-file>
-    <welcome-file>inddddddex.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   
   <!-- The definition of the Root Spring Container shared by all Servlets and Filters -->

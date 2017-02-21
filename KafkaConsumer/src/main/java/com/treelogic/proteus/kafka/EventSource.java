@@ -1,6 +1,5 @@
 package com.treelogic.proteus.kafka;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -63,15 +62,10 @@ public class EventSource implements  ApplicationEventPublisherAware {
 
 				String message_formatted = record.value();
 
+				this.applicationEventPublisher.publishEvent(new KafkaMessageEvent(this, message_formatted));
+				
 				try {
-					KafkaRecord<String> kafkaRecord = mapper.readValue(message_formatted, KafkaRecord.class);
-					this.applicationEventPublisher.publishEvent(new KafkaMessageEvent(this, kafkaRecord));
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

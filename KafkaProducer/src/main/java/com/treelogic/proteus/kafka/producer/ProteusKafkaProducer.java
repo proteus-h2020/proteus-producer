@@ -15,8 +15,97 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Properties;
+//[developeridi@clusterIDI kafka]$ bin/kafka-topics.sh --create --zookeeper 192.168.4.247:2181 --topic proteus --partition 3 --config retention.bytes=10737418240 --replication-factor 1
 
+public class ProteusKafkaProducer {
+
+	public static String HDFS_URI = "hdfs://192.168.4.245:8020";
+	public static String PROTEUS_KAFKA_TOPIC = "proteus-test";
+	public static String PROTEUS_MERGED_TABLE = "/proteus/kafkainput/new/coiltimeseries_sorted.csv";
+	
+	private static final Logger logger = LoggerFactory.getLogger(ProteusKafkaProducer.class);
+	private static Producer<String, String> producer;
+
+	public static void main(String[] args) throws IOException {
+		
+		logger.info("Starting Proteus Kafka producer...");
+		
+		int loopIteration = 1;
+		Properties properties = new Properties();
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+				"192.168.4.246:6667,192.168.4.247:6667,192.168.4.248:6667");
+		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+				"org.apache.kafka.common.serialization.StringSerializer");
+		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+				"org.apache.kafka.common.serialization.StringSerializer");
+		properties.put(ProducerConfig.ACKS_CONFIG, "all");
+		properties.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 100);
+
+		producer = new KafkaProducer<>(properties);
+
+		// Configuracion HDFS
+
+		Configuration conf = new Configuration();
+
+		conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+		conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
+
+		FileSystem fs = FileSystem.get(URI.create(HDFS_URI), conf);
+
+		ObjectMapper mapper = new ObjectMapper();
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a z");
+		mapper.setDateFormat(df);
+		
+		
+		// Read line by line HDFS
+
+		while (true) {
+			logger.info("Starting a new kafka iteration over the HDFS: ", (loopIteration++));
+			
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(fs.open(new Path(HDFS_URI + PROTEUS_MERGED_TABLE))));
+
+			try {
+				// La primera línea del CSV es una cabecera
+				String line = br.readLine();
+
+				// Primera linea a procesar
+				line = br.readLine();
+				while (line != null) {
+					String[] fields = line.split(",");
+					
+					if (fields[1]==null||fields[1].equals("null")){
+						fields[1] = "0";
+					}
+					
+					ProteusPojo pojo = new ProteusPojo(
+							Double.parseDouble(fields[0]),
+							Double.parseDouble(fields[1]),
+							Double.parseDouble(fields[2]),
+							fields[3],
+							fields[4]
+					);
+	
+					String message = mapper.writeValueAsString(pojo);					
+					producer.send(new ProducerRecord<String, String>(PROTEUS_KAFKA_TOPIC, message));
+					line = br.readLine();
+					
+					Thread.sleep(500);
+				}
+			} catch (Exception e) {
+				logger.error("Error in the Proteus Kafka producer", e);
+			}
+		}
+	}
+}
+
+
+/**
 public class ProteusKafkaProducer {
 
 	public static String PROTEUS_TABLE = "/developeridi/formacion/materiales/mifichero.txt";
@@ -58,7 +147,11 @@ public class ProteusKafkaProducer {
 		FileSystem fs = FileSystem.get(URI.create(HDFS_URI), conf);
 
 		ObjectMapper mapper = new ObjectMapper();
-
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a z");
+		mapper.setDateFormat(df);
+		
+		
 		// Read line by line HDFS
 
 		while (TEST == true) {
@@ -75,6 +168,7 @@ public class ProteusKafkaProducer {
 				line = br.readLine();
 				while (line != null) {
 					String[] fields = line.split(",");
+					System.out.println(Arrays.toString(fields));
 
 					CoilTimeSeriesPojo<String> pojo_message = new CoilTimeSeriesPojo<String>(fields[0], fields[1],
 							fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8], fields[9],
@@ -86,10 +180,11 @@ public class ProteusKafkaProducer {
 							fields[45]);
 
 					String message = mapper.writeValueAsString(pojo_message);
+					
 					producer.send(new ProducerRecord<String, String>(PROTEUS_KAFKA_TOPIC, message));
-
 					line = br.readLine();
-
+					
+					Thread.sleep(1000);
 				}
 			} catch (Exception e) {
 				logger.error("Error in the Proteus Kafka producer", e);
@@ -97,3 +192,4 @@ public class ProteusKafkaProducer {
 		}
 	}
 }
+**/

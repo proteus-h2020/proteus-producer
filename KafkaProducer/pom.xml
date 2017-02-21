@@ -10,7 +10,22 @@
   
   <dependencies>
 		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka_2.10 -->
-
-
 	</dependencies>
+	<build>
+  <plugins>
+    <plugin>
+      <artifactId>maven-assembly-plugin</artifactId>
+      <configuration>
+        <archive>
+          <manifest>
+            <mainClass>com.treelogic.proteus.kafka.producer.ProteusKafkaProducer</mainClass>
+          </manifest>
+        </archive>
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
 </project>

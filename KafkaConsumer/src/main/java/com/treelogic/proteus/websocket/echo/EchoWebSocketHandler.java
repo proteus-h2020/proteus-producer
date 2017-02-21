@@ -40,7 +40,9 @@ public class EchoWebSocketHandler extends TextWebSocketHandler implements Applic
 	}
 	
 	private void sendAll(Object o){
-		String json = this.parser.parse(o);
+		//String json = this.parser.parse(o);
+		String json = (String) o;
+		System.out.println(json);
 		for(WebSocketSession s : this.sessions){
 			try {
 				s.sendMessage(new TextMessage(json));

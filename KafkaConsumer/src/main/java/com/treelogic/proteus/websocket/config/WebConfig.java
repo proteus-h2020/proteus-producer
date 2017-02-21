@@ -42,7 +42,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(echoWebSocketHandler(), "/kafkaService");
+		registry.addHandler(echoWebSocketHandler(), "/kafkaService").setAllowedOrigins("*");
 
 	}
 

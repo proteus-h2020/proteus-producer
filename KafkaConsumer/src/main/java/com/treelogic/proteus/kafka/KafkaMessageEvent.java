@@ -6,9 +6,9 @@ public class KafkaMessageEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = 5743058377815147529L;
 
-	private KafkaRecord<?> message;
+	private String message;
 
-	public KafkaMessageEvent(Object source, KafkaRecord<?> message) {
+	public KafkaMessageEvent(Object source, String  message) {
 		super(source);
 		this.message = message;
 	}
@@ -20,7 +20,7 @@ public class KafkaMessageEvent extends ApplicationEvent {
 		return builder.toString();
 	}
 	
-	public KafkaRecord<?> getMessage(){
+	public String getMessage(){
 		return this.message;
 	}
 

@@ -25,7 +25,7 @@ public class ProteusKafkaProducer {
 
 	public static String HDFS_URI = "hdfs://192.168.4.245:8020";
 	public static String PROTEUS_KAFKA_TOPIC = "proteus-test";
-	public static String PROTEUS_MERGED_TABLE = "/proteus/kafkainput/new/coiltimeseries_sorted.csv";
+	public static String PROTEUS_MERGED_TABLE = "/proteus/final/PROTEUS.csv";
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProteusKafkaProducer.class);
 	private static Producer<String, String> producer;
@@ -77,8 +77,11 @@ public class ProteusKafkaProducer {
 				// Primera linea a procesar
 				line = br.readLine();
 				while (line != null) {
+
+					/*
 					String[] fields = line.split(",");
-					
+
+
 					if (fields[1]==null||fields[1].equals("null")){
 						fields[1] = "0";
 					}
@@ -91,8 +94,11 @@ public class ProteusKafkaProducer {
 							fields[4]
 					);
 	
-					String message = mapper.writeValueAsString(pojo);					
-					producer.send(new ProducerRecord<String, String>(PROTEUS_KAFKA_TOPIC, message));
+					String message = mapper.writeValueAsString(pojo);
+
+					*/
+
+					producer.send(new ProducerRecord<String, String>(PROTEUS_KAFKA_TOPIC, line));
 					line = br.readLine();
 					
 					Thread.sleep(500);

@@ -78,6 +78,8 @@ public class ProteusKafkaProducer {
 				line = br.readLine();
 				while (line != null) {
 
+					System.out.println("Linea: " + line);
+
 					/*
 					String[] fields = line.split(",");
 

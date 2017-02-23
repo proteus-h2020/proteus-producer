@@ -1,226 +1,313 @@
 package com.treelogic.proteus.kafka;
 
 /**
- * Created by pablo.mesa on 2/02/17.
+ * created by pablo.mesa on 2/02/17.
  */
 public class Coil {
 
-    public int id;
-    public double positionX;
-    public double positionY;
 
-    public double C0001, C0002, C0003, C0004, C0005, C0006, C0007, C0008, C0009, C0010;
-    public double C0011, C0012, C0013, C0014, C0015, C0016, C0017, C0018, C0019, C0020;
-    public double C0021, C0022, C0023, C0024, C0025, C0026, C0027, C0028, C0029, C0030;
-    public double C0031, C0032, C0033, C0034, C0035, C0036, C0037, C0038, C0039, C0040;
-    public double C0041, C0042, C0043, C0044, C0045, C0046, C0047, C0048, C0049, C0050;
-    public double C0051, C0052, C0053, C0054, C0055, C0056;
+    public Double positionX;
+    public Double positionY;
+    public Integer id;
+
+    public Double c0001, c0002, c0003, c0004, c0005, c0006, c0007, c0008, c0009, c0010;
+    public Double c0011, c0012, c0013, c0014, c0015, c0016, c0017, c0018, c0019, c0020;
+    public Double c0021, c0022, c0023, c0024, c0025, c0026, c0027, c0028, c0029, c0030;
+    public Double c0031, c0032, c0033, c0034, c0035, c0036, c0037, c0038, c0039, c0040;
+    public Double c0041, c0042, c0043, c0044, c0045, c0046, c0047, c0048, c0049, c0050;
+    public Double c0051, c0052, c0053, c0054, c0055, c0056;
 
 
     public Coil(){};
 
-    public Coil(int id, double positionX, double positionY){
+    public Coil(int id, Double positionX, Double positionY){
         this.id = id;
         this.positionX = positionX;
         this.positionY = positionY;
     }
 
-    public Coil(int id, double positionX, double positionY, double C0001, double C0002, double C0003, double C0004, double C0005, double C0006, double C0007, double C0008, double C0009, double C0010, double C0011, double C0012, double C0013, double C0014, double C0015, double C0016, double C0017, double C0018, double C0019, double C0020, double C0021, double C0022, double C0023, double C0024, double C0025, double C0026, double C0027, double C0028, double C0029, double C0030, double C0031, double C0032, double C0033, double C0034, double C0035, double C0036, double C0037, double C0038, double C0039, double C0040, double C0041, double C0042, double C0043, double C0044, double C0045, double C0046, double C0047, double C0048, double C0049, double C0050, double C0051, double C0052, double C0053, double C0054, double C0055, double C0056){
+    public Coil(Double positionX, Double positionY, int id, Double c0001, Double c0002, Double c0003, Double c0004, Double c0005, Double c0006, Double c0007, Double c0008, Double c0009, Double c0010, Double c0011, Double c0012, Double c0013, Double c0014, Double c0015, Double c0016, Double c0017, Double c0018, Double c0019, Double c0020, Double c0021, Double c0022, Double c0023, Double c0024, Double c0025, Double c0026, Double c0027, Double c0028, Double c0029, Double c0030, Double c0031, Double c0032, Double c0033, Double c0034, Double c0035, Double c0036, Double c0037, Double c0038, Double c0039, Double c0040, Double c0041, Double c0042, Double c0043, Double c0044, Double c0045, Double c0046, Double c0047, Double c0048, Double c0049, Double c0050, Double c0051, Double c0052, Double c0053, Double c0054, Double c0055, Double c0056){
         this.id = id;
         this.positionX = positionX;
         this.positionY = positionY;
-        this.C0001 = C0001;
-        this.C0002 = C0002;
-        this.C0003 = C0003;
-        this.C0004 = C0004;
-        this.C0005 = C0005;
-        this.C0006 = C0006;
-        this.C0007 = C0007;
-        this.C0008 = C0008;
-        this.C0009 = C0009;
-        this.C0010 = C0010;
-        this.C0011 = C0011;
-        this.C0012 = C0012;
-        this.C0013 = C0013;
-        this.C0014 = C0014;
-        this.C0015 = C0015;
-        this.C0016 = C0016;
-        this.C0017 = C0017;
-        this.C0018 = C0018;
-        this.C0019 = C0019;
-        this.C0020 = C0020;
-        this.C0021 = C0021;
-        this.C0022 = C0022;
-        this.C0023 = C0023;
-        this.C0024 = C0024;
-        this.C0025 = C0025;
-        this.C0026 = C0026;
-        this.C0027 = C0027;
-        this.C0028 = C0028;
-        this.C0029 = C0029;
-        this.C0030 = C0030;
-        this.C0031 = C0031;
-        this.C0032 = C0032;
-        this.C0033 = C0033;
-        this.C0034 = C0034;
-        this.C0035 = C0035;
-        this.C0036 = C0036;
-        this.C0037 = C0037;
-        this.C0038 = C0038;
-        this.C0039 = C0039;
-        this.C0040 = C0040;
-        this.C0041 = C0041;
-        this.C0042 = C0042;
-        this.C0043 = C0043;
-        this.C0044 = C0044;
-        this.C0045 = C0045;
-        this.C0046 = C0046;
-        this.C0047 = C0047;
-        this.C0048 = C0048;
-        this.C0049 = C0049;
-        this.C0050 = C0050;
-        this.C0051 = C0051;
-        this.C0052 = C0052;
-        this.C0053 = C0053;
-        this.C0054 = C0054;
-        this.C0055 = C0055;
-        this.C0056 = C0056;
+        this.c0001 = c0001;
+        this.c0002 = c0002;
+        this.c0003 = c0003;
+        this.c0004 = c0004;
+        this.c0005 = c0005;
+        this.c0006 = c0006;
+        this.c0007 = c0007;
+        this.c0008 = c0008;
+        this.c0009 = c0009;
+        this.c0010 = c0010;
+        this.c0011 = c0011;
+        this.c0012 = c0012;
+        this.c0013 = c0013;
+        this.c0014 = c0014;
+        this.c0015 = c0015;
+        this.c0016 = c0016;
+        this.c0017 = c0017;
+        this.c0018 = c0018;
+        this.c0019 = c0019;
+        this.c0020 = c0020;
+        this.c0021 = c0021;
+        this.c0022 = c0022;
+        this.c0023 = c0023;
+        this.c0024 = c0024;
+        this.c0025 = c0025;
+        this.c0026 = c0026;
+        this.c0027 = c0027;
+        this.c0028 = c0028;
+        this.c0029 = c0029;
+        this.c0030 = c0030;
+        this.c0031 = c0031;
+        this.c0032 = c0032;
+        this.c0033 = c0033;
+        this.c0034 = c0034;
+        this.c0035 = c0035;
+        this.c0036 = c0036;
+        this.c0037 = c0037;
+        this.c0038 = c0038;
+        this.c0039 = c0039;
+        this.c0040 = c0040;
+        this.c0041 = c0041;
+        this.c0042 = c0042;
+        this.c0043 = c0043;
+        this.c0044 = c0044;
+        this.c0045 = c0045;
+        this.c0046 = c0046;
+        this.c0047 = c0047;
+        this.c0048 = c0048;
+        this.c0049 = c0049;
+        this.c0050 = c0050;
+        this.c0051 = c0051;
+        this.c0052 = c0052;
+        this.c0053 = c0053;
+        this.c0054 = c0054;
+        this.c0055 = c0055;
+        this.c0056 = c0056;
     }
 
     // Getters
 
     public int getID(){return id;}
-    public double getPositionX(){ return positionX;}
-    public double getPositionY(){ return positionY;}
+    public Double getPositionX(){ return positionX;}
+    public Double getPositionY(){ return positionY;}
 
-    public double getC0001(){ return C0001;}
-    public double getC0002(){ return C0002;}
-    public double getC0003(){ return C0003;}
-    public double getC0004(){ return C0004;}
-    public double getC0005(){ return C0005;}
-    public double getC0006(){ return C0006;}
-    public double getC0007(){ return C0007;}
-    public double getC0008(){ return C0008;}
-    public double getC0009(){ return C0009;}
-    public double getC0010(){ return C0010;}
+    public Double getc0001(){ return c0001;}
+    public Double getc0002(){ return c0002;}
+    public Double getc0003(){ return c0003;}
+    public Double getc0004(){ return c0004;}
+    public Double getc0005(){ return c0005;}
+    public Double getc0006(){ return c0006;}
+    public Double getc0007(){ return c0007;}
+    public Double getc0008(){ return c0008;}
+    public Double getc0009(){ return c0009;}
+    public Double getc0010(){ return c0010;}
 
-    public double getC0011(){ return C0011;}
-    public double getC0012(){ return C0012;}
-    public double getC0013(){ return C0013;}
-    public double getC0014(){ return C0014;}
-    public double getC0015(){ return C0015;}
-    public double getC0016(){ return C0016;}
-    public double getC0017(){ return C0017;}
-    public double getC0018(){ return C0018;}
-    public double getC0019(){ return C0019;}
-    public double getC0020(){ return C0020;}
+    public Double getc0011(){ return c0011;}
+    public Double getc0012(){ return c0012;}
+    public Double getc0013(){ return c0013;}
+    public Double getc0014(){ return c0014;}
+    public Double getc0015(){ return c0015;}
+    public Double getc0016(){ return c0016;}
+    public Double getc0017(){ return c0017;}
+    public Double getc0018(){ return c0018;}
+    public Double getc0019(){ return c0019;}
+    public Double getc0020(){ return c0020;}
 
-    public double getC0021(){ return C0021;}
-    public double getC0022(){ return C0022;}
-    public double getC0023(){ return C0023;}
-    public double getC0024(){ return C0024;}
-    public double getC0025(){ return C0025;}
-    public double getC0026(){ return C0026;}
-    public double getC0027(){ return C0027;}
-    public double getC0028(){ return C0028;}
-    public double getC0029(){ return C0029;}
-    public double getC0030(){ return C0030;}
+    public Double getc0021(){ return c0021;}
+    public Double getc0022(){ return c0022;}
+    public Double getc0023(){ return c0023;}
+    public Double getc0024(){ return c0024;}
+    public Double getc0025(){ return c0025;}
+    public Double getc0026(){ return c0026;}
+    public Double getc0027(){ return c0027;}
+    public Double getc0028(){ return c0028;}
+    public Double getc0029(){ return c0029;}
+    public Double getc0030(){ return c0030;}
 
-    public double getC0031(){ return C0031;}
-    public double getC0032(){ return C0032;}
-    public double getC0033(){ return C0033;}
-    public double getC0034(){ return C0034;}
-    public double getC0035(){ return C0035;}
-    public double getC0036(){ return C0036;}
-    public double getC0037(){ return C0037;}
-    public double getC0038(){ return C0038;}
-    public double getC0039(){ return C0039;}
-    public double getC0040(){ return C0040;}
+    public Double getc0031(){ return c0031;}
+    public Double getc0032(){ return c0032;}
+    public Double getc0033(){ return c0033;}
+    public Double getc0034(){ return c0034;}
+    public Double getc0035(){ return c0035;}
+    public Double getc0036(){ return c0036;}
+    public Double getc0037(){ return c0037;}
+    public Double getc0038(){ return c0038;}
+    public Double getc0039(){ return c0039;}
+    public Double getc0040(){ return c0040;}
 
-    public double getC0041(){ return C0041;}
-    public double getC0042(){ return C0042;}
-    public double getC0043(){ return C0043;}
-    public double getC0044(){ return C0044;}
-    public double getC0045(){ return C0045;}
-    public double getC0046(){ return C0046;}
-    public double getC0047(){ return C0047;}
-    public double getC0048(){ return C0048;}
-    public double getC0049(){ return C0049;}
-    public double getC0050(){ return C0050;}
+    public Double getc0041(){ return c0041;}
+    public Double getc0042(){ return c0042;}
+    public Double getc0043(){ return c0043;}
+    public Double getc0044(){ return c0044;}
+    public Double getc0045(){ return c0045;}
+    public Double getc0046(){ return c0046;}
+    public Double getc0047(){ return c0047;}
+    public Double getc0048(){ return c0048;}
+    public Double getc0049(){ return c0049;}
+    public Double getc0050(){ return c0050;}
 
-    public double getC0051(){ return C0051;}
-    public double getC0052(){ return C0052;}
-    public double getC0053(){ return C0053;}
-    public double getC0054(){ return C0054;}
-    public double getC0055(){ return C0055;}
-    public double getC0056(){ return C0056;}
+    public Double getc0051(){ return c0051;}
+    public Double getc0052(){ return c0052;}
+    public Double getc0053(){ return c0053;}
+    public Double getc0054(){ return c0054;}
+    public Double getc0055(){ return c0055;}
+    public Double getc0056(){ return c0056;}
 
 
     // Setters
 
     public void setID(int id){ this.id = id;}
-    public void setPositionX(double positionX){ this.positionX = positionX;}
-    public void setPositionY(double positionY){ this.positionY = positionY;}
+    public void setPositionX(Double positionX){ this.positionX = positionX;}
+    public void setPositionY(Double positionY){ this.positionY = positionY;}
 
-    public void setC0001(double C0001){ this.C0001 = C0001;}
-    public void setC0002(double C0002){ this.C0002 = C0002;}
-    public void setC0003(double C0003){ this.C0003 = C0003;}
-    public void setC0004(double C0004){ this.C0004 = C0004;}
-    public void setC0005(double C0005){ this.C0005 = C0005;}
-    public void setC0006(double C0006){ this.C0006 = C0006;}
-    public void setC0007(double C0007){ this.C0007 = C0007;}
-    public void setC0008(double C0008){ this.C0008 = C0008;}
-    public void setC0009(double C0009){ this.C0009 = C0009;}
-    public void setC0010(double C0010){ this.C0010 = C0010;}
+    public void setc0001(Double c0001){ this.c0001 = c0001;}
+    public void setc0002(Double c0002){ this.c0002 = c0002;}
+    public void setc0003(Double c0003){ this.c0003 = c0003;}
+    public void setc0004(Double c0004){ this.c0004 = c0004;}
+    public void setc0005(Double c0005){ this.c0005 = c0005;}
+    public void setc0006(Double c0006){ this.c0006 = c0006;}
+    public void setc0007(Double c0007){ this.c0007 = c0007;}
+    public void setc0008(Double c0008){ this.c0008 = c0008;}
+    public void setc0009(Double c0009){ this.c0009 = c0009;}
+    public void setc0010(Double c0010){ this.c0010 = c0010;}
 
-    public void setC0011(double C0011){ this.C0011 = C0011;}
-    public void setC0012(double C0012){ this.C0012 = C0012;}
-    public void setC0013(double C0013){ this.C0013 = C0013;}
-    public void setC0014(double C0014){ this.C0014 = C0014;}
-    public void setC0015(double C0015){ this.C0015 = C0015;}
-    public void setC0016(double C0016){ this.C0016 = C0016;}
-    public void setC0017(double C0017){ this.C0017 = C0017;}
-    public void setC0018(double C0018){ this.C0018 = C0018;}
-    public void setC0019(double C0019){ this.C0019 = C0019;}
-    public void setC0020(double C0020){ this.C0020 = C0020;}
+    public void setc0011(Double c0011){ this.c0011 = c0011;}
+    public void setc0012(Double c0012){ this.c0012 = c0012;}
+    public void setc0013(Double c0013){ this.c0013 = c0013;}
+    public void setc0014(Double c0014){ this.c0014 = c0014;}
+    public void setc0015(Double c0015){ this.c0015 = c0015;}
+    public void setc0016(Double c0016){ this.c0016 = c0016;}
+    public void setc0017(Double c0017){ this.c0017 = c0017;}
+    public void setc0018(Double c0018){ this.c0018 = c0018;}
+    public void setc0019(Double c0019){ this.c0019 = c0019;}
+    public void setc0020(Double c0020){ this.c0020 = c0020;}
 
-    public void setC0021(double C0011){ this.C0011 = C0011;}
-    public void setC0022(double C0012){ this.C0012 = C0012;}
-    public void setC0023(double C0013){ this.C0013 = C0013;}
-    public void setC0024(double C0014){ this.C0014 = C0014;}
-    public void setC0025(double C0015){ this.C0015 = C0015;}
-    public void setC0026(double C0016){ this.C0016 = C0016;}
-    public void setC0027(double C0017){ this.C0017 = C0017;}
-    public void setC0028(double C0018){ this.C0018 = C0018;}
-    public void setC0029(double C0019){ this.C0019 = C0019;}
-    public void setC0030(double C0020){ this.C0020 = C0020;}
+    public void setc0021(Double c0011){ this.c0011 = c0011;}
+    public void setc0022(Double c0012){ this.c0012 = c0012;}
+    public void setc0023(Double c0013){ this.c0013 = c0013;}
+    public void setc0024(Double c0014){ this.c0014 = c0014;}
+    public void setc0025(Double c0015){ this.c0015 = c0015;}
+    public void setc0026(Double c0016){ this.c0016 = c0016;}
+    public void setc0027(Double c0017){ this.c0017 = c0017;}
+    public void setc0028(Double c0018){ this.c0018 = c0018;}
+    public void setc0029(Double c0019){ this.c0019 = c0019;}
+    public void setc0030(Double c0020){ this.c0020 = c0020;}
 
-    public void setC0031(double C0031){ this.C0031 = C0031;}
-    public void setC0032(double C0032){ this.C0032 = C0032;}
-    public void setC0033(double C0033){ this.C0033 = C0033;}
-    public void setC0034(double C0034){ this.C0034 = C0034;}
-    public void setC0035(double C0035){ this.C0035 = C0035;}
-    public void setC0036(double C0036){ this.C0036 = C0036;}
-    public void setC0037(double C0037){ this.C0037 = C0037;}
-    public void setC0038(double C0038){ this.C0038 = C0038;}
-    public void setC0039(double C0039){ this.C0039 = C0039;}
-    public void setC0040(double C0040){ this.C0040 = C0040;}
+    public void setc0031(Double c0031){ this.c0031 = c0031;}
+    public void setc0032(Double c0032){ this.c0032 = c0032;}
+    public void setc0033(Double c0033){ this.c0033 = c0033;}
+    public void setc0034(Double c0034){ this.c0034 = c0034;}
+    public void setc0035(Double c0035){ this.c0035 = c0035;}
+    public void setc0036(Double c0036){ this.c0036 = c0036;}
+    public void setc0037(Double c0037){ this.c0037 = c0037;}
+    public void setc0038(Double c0038){ this.c0038 = c0038;}
+    public void setc0039(Double c0039){ this.c0039 = c0039;}
+    public void setc0040(Double c0040){ this.c0040 = c0040;}
 
-    public void setC0041(double C0041){ this.C0011 = C0041;}
-    public void setC0042(double C0042){ this.C0012 = C0042;}
-    public void setC0043(double C0043){ this.C0013 = C0043;}
-    public void setC0044(double C0044){ this.C0014 = C0044;}
-    public void setC0045(double C0045){ this.C0015 = C0045;}
-    public void setC0046(double C0046){ this.C0016 = C0046;}
-    public void setC0047(double C0047){ this.C0017 = C0047;}
-    public void setC0048(double C0048){ this.C0018 = C0048;}
-    public void setC0049(double C0049){ this.C0019 = C0049;}
-    public void setC0050(double C0050){ this.C0020 = C0050;}
+    public void setc0041(Double c0041){ this.c0011 = c0041;}
+    public void setc0042(Double c0042){ this.c0012 = c0042;}
+    public void setc0043(Double c0043){ this.c0013 = c0043;}
+    public void setc0044(Double c0044){ this.c0014 = c0044;}
+    public void setc0045(Double c0045){ this.c0015 = c0045;}
+    public void setc0046(Double c0046){ this.c0016 = c0046;}
+    public void setc0047(Double c0047){ this.c0017 = c0047;}
+    public void setc0048(Double c0048){ this.c0018 = c0048;}
+    public void setc0049(Double c0049){ this.c0019 = c0049;}
+    public void setc0050(Double c0050){ this.c0020 = c0050;}
 
-    public void setC0051(double C0051){ this.C0051 = C0051;}
-    public void setC0052(double C0052){ this.C0052 = C0052;}
-    public void setC0053(double C0053){ this.C0053 = C0053;}
-    public void setC0054(double C0054){ this.C0054 = C0054;}
-    public void setC0055(double C0055){ this.C0055 = C0055;}
-    public void setC0056(double C0056){ this.C0056 = C0056;}
+    public void setc0051(Double c0051){ this.c0051 = c0051;}
+    public void setc0052(Double c0052){ this.c0052 = c0052;}
+    public void setc0053(Double c0053){ this.c0053 = c0053;}
+    public void setc0054(Double c0054){ this.c0054 = c0054;}
+    public void setc0055(Double c0055){ this.c0055 = c0055;}
+    public void setc0056(Double c0056){ this.c0056 = c0056;}
+
+
+    public Coil generateCoilObject(String[] mensaje){
+
+        int k = 0;
+        Double[] valores = new Double[59];
+
+        while ( k < 59){
+            try {
+                if (mensaje[k].isEmpty() || mensaje[k].equals("null")) valores[k] = Double.NaN;
+                if (!mensaje[k].isEmpty()) valores[k] = Double.parseDouble(mensaje[k]);
+                k++;
+            } catch ( IndexOutOfBoundsException e){
+                valores[k] = Double.NaN;
+                k++;
+            }
+            catch ( NumberFormatException ex){
+                valores[k] = Double.NaN;
+                k++;
+            }
+        }
+
+        Coil bobina = new Coil(
+                (valores[0]),
+                (valores[1]),
+                (valores[2].intValue()),
+                (valores[3]),
+                (valores[4]),
+                (valores[5]),
+                (valores[6]),
+                (valores[7]),
+                (valores[8]),
+                (valores[9]),
+                (valores[10]),
+                (valores[11]),
+                (valores[12]),
+                (valores[13]),
+                (valores[14]),
+                (valores[15]),
+                (valores[16]),
+                (valores[17]),
+                (valores[18]),
+                (valores[19]),
+                (valores[20]),
+                (valores[21]),
+                (valores[22]),
+                (valores[23]),
+                (valores[24]),
+                (valores[25]),
+                (valores[26]),
+                (valores[27]),
+                (valores[28]),
+                (valores[29]),
+                (valores[30]),
+                (valores[31]),
+                (valores[32]),
+                (valores[33]),
+                (valores[34]),
+                (valores[35]),
+                (valores[36]),
+                (valores[37]),
+                (valores[38]),
+                (valores[39]),
+                (valores[40]),
+                (valores[41]),
+                (valores[42]),
+                (valores[43]),
+                (valores[44]),
+                (valores[45]),
+                (valores[46]),
+                (valores[47]),
+                (valores[48]),
+                (valores[49]),
+                (valores[50]),
+                (valores[51]),
+                (valores[52]),
+                (valores[53]),
+                (valores[54]),
+                (valores[55]),
+                (valores[56]),
+                (valores[57]),
+                (valores[58])
+        );
+
+        return bobina;
+    }
 }

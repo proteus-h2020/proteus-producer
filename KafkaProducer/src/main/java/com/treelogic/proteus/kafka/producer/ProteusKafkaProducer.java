@@ -60,8 +60,7 @@ public class ProteusKafkaProducer {
 		
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a z");
 		mapper.setDateFormat(df);
-		
-		
+
 		// Read line by line HDFS
 
 		while (true) {
@@ -77,28 +76,6 @@ public class ProteusKafkaProducer {
 				// Primera linea a procesar
 				line = br.readLine();
 				while (line != null) {
-
-					System.out.println("Linea: " + line);
-
-					/*
-					String[] fields = line.split(",");
-
-
-					if (fields[1]==null||fields[1].equals("null")){
-						fields[1] = "0";
-					}
-					
-					ProteusPojo pojo = new ProteusPojo(
-							Double.parseDouble(fields[0]),
-							Double.parseDouble(fields[1]),
-							Double.parseDouble(fields[2]),
-							fields[3],
-							fields[4]
-					);
-	
-					String message = mapper.writeValueAsString(pojo);
-
-					*/
 
 					producer.send(new ProducerRecord<String, String>(PROTEUS_KAFKA_TOPIC, line));
 					line = br.readLine();

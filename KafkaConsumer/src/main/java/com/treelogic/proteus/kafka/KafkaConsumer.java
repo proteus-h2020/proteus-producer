@@ -43,10 +43,8 @@ public class KafkaConsumer {
 
 
         while (true) {
-            System.out.println("While");
 
             ConsumerRecords<String, String> records = consumer.poll(1);
-            System.out.println("Records: " + records.isEmpty());
 
             for (ConsumerRecord<String, String> record : records) {
 
@@ -54,79 +52,16 @@ public class KafkaConsumer {
 
                 String[] fields = message_formatted.split(",");
 
-
-                if (fields[1] == null || fields[1].equals("null")) {
-                    fields[1] = "0";
-                }
-
-                Coil pojo = new Coil(Integer.parseInt(fields[0]),
-                        Double.parseDouble(fields[1]),
-                        Double.parseDouble(fields[2]),
-                        Double.parseDouble(fields[3]),
-                        Double.parseDouble(fields[4]),
-                        Double.parseDouble(fields[5]),
-                        Double.parseDouble(fields[6]),
-                        Double.parseDouble(fields[7]),
-                        Double.parseDouble(fields[8]),
-                        Double.parseDouble(fields[9]),
-                        Double.parseDouble(fields[10]),
-                        Double.parseDouble(fields[11]),
-                        Double.parseDouble(fields[12]),
-                        Double.parseDouble(fields[13]),
-                        Double.parseDouble(fields[14]),
-                        Double.parseDouble(fields[15]),
-                        Double.parseDouble(fields[16]),
-                        Double.parseDouble(fields[17]),
-                        Double.parseDouble(fields[18]),
-                        Double.parseDouble(fields[19]),
-                        Double.parseDouble(fields[20]),
-                        Double.parseDouble(fields[21]),
-                        Double.parseDouble(fields[22]),
-                        Double.parseDouble(fields[23]),
-                        Double.parseDouble(fields[24]),
-                        Double.parseDouble(fields[25]),
-                        Double.parseDouble(fields[26]),
-                        Double.parseDouble(fields[27]),
-                        Double.parseDouble(fields[28]),
-                        Double.parseDouble(fields[29]),
-                        Double.parseDouble(fields[30]),
-                        Double.parseDouble(fields[31]),
-                        Double.parseDouble(fields[32]),
-                        Double.parseDouble(fields[33]),
-                        Double.parseDouble(fields[34]),
-                        Double.parseDouble(fields[35]),
-                        Double.parseDouble(fields[36]),
-                        Double.parseDouble(fields[37]),
-                        Double.parseDouble(fields[38]),
-                        Double.parseDouble(fields[39]),
-                        Double.parseDouble(fields[40]),
-                        Double.parseDouble(fields[41]),
-                        Double.parseDouble(fields[42]),
-                        Double.parseDouble(fields[43]),
-                        Double.parseDouble(fields[44]),
-                        Double.parseDouble(fields[45]),
-                        Double.parseDouble(fields[46]),
-                        Double.parseDouble(fields[47]),
-                        Double.parseDouble(fields[48]),
-                        Double.parseDouble(fields[49]),
-                        Double.parseDouble(fields[50]),
-                        Double.parseDouble(fields[51]),
-                        Double.parseDouble(fields[52]),
-                        Double.parseDouble(fields[53]),
-                        Double.parseDouble(fields[54]),
-                        Double.parseDouble(fields[55]),
-                        Double.parseDouble(fields[56]),
-                        Double.parseDouble(fields[57]),
-                        Double.parseDouble(fields[58]));
+                Coil coil = new Coil().generateCoilObject(fields);
 
                 String message = null;
                 try {
-                    message = mapper.writeValueAsString(pojo);
+                    message = mapper.writeValueAsString(coil);
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }
 
-                System.out.println("Mensaje: " + message);
+                System.out.println("Linea formateada: " + message);
 
                 try {
                     Thread.sleep(500);

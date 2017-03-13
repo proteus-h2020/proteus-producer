@@ -1,13 +1,13 @@
 package com.treelogic.proteus.kafka.producer;
+
 import org.apache.htrace.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.treelogic.proteus.kafka.model.CoilTimeSeriesPojo;
+
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -17,10 +17,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Properties;
-//[developeridi@clusterIDI kafka]$ bin/kafka-topics.sh --create --zookeeper 192.168.4.247:2181 --topic proteus --partition 3 --config retention.bytes=10737418240 --replication-factor 1
 
 public class ProteusKafkaProducer {
 

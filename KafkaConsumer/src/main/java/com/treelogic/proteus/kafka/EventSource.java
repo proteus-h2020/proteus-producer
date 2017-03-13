@@ -68,7 +68,7 @@ public class EventSource implements  ApplicationEventPublisherAware {
 
 				String[] fields = message_formatted.split(",");
 
-				cd ma cd ...[cd ....length - 1]
+				Coil coil = new Coil().generateCoilObject(fields);
 
 				String message = mapper.writeValueAsString(coil);
 

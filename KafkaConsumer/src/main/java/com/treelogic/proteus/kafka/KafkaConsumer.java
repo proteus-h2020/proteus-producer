@@ -7,6 +7,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.context.ApplicationEventPublisher;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -17,11 +18,10 @@ public class KafkaConsumer {
 
     private ApplicationEventPublisher applicationEventPublisher = null;
     private static Properties kafkaProperties;
-    public static String PROTEUS_KAFKA_TOPIC = "proteus-test";
-    public static long DELAY = 10;
+    public static String PROTEUS_KAFKA_TOPIC = "test-timestamp";
     private static ObjectMapper mapper = new ObjectMapper();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         kafkaProperties = new Properties();
         kafkaProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -50,18 +50,12 @@ public class KafkaConsumer {
 
                 String message_formatted = record.value();
 
-                String[] fields = message_formatted.split(",");
+                Coil coil = mapper.readValue(message_formatted, Coil.class);
 
-                Coil coil = new Coil().generateCoilObject(fields);
+                String message = mapper.writeValueAsString(coil);
 
-                String message = null;
-                try {
-                    message = mapper.writeValueAsString(coil);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.println("Linea formateada: " + message);
+                System.out.println("Linea formateada: " + coil.getTimeStamp());
+                System.out.println("Mensaje: " + message);
 
                 try {
                     Thread.sleep(500);

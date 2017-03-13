@@ -1,7 +1,5 @@
 package com.treelogic.proteus.kafka.producer;
 
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,15 +13,13 @@ import java.util.ArrayList;
  */
 public class ProducerLogic {
 
-
-
-
     ArrayList<Coil> coilsbuffer = new ArrayList<>();
     ArrayList<Double> xpositionsbuffer = new ArrayList<>();
     Integer identificadorbobina = Integer.MIN_VALUE;
-    ArrayList<Double> delays = new ArrayList<>();
+    ArrayList<Double> stoptimers = new ArrayList<>();
     Double tiempogeneracionbobina = 0.0;
     Double bobina = 120000.0;
+    Integer contadorestimestamp;
     public Producer<String, String> productor;
     String PROTEUS_KAFKA_TOPIC = "test-timestamp";
     private static ObjectMapper mapper = new ObjectMapper();
@@ -50,44 +46,28 @@ public class ProducerLogic {
     }
 
     public void imprimirBufferBobinas() throws InterruptedException {
-
-
-        calculaDelays();
-
-        System.out.println("Tamaño buffer: " + coilsbuffer.size());
-        System.out.println("Tamaño posiciones x: " + xpositionsbuffer.size());
-        System.out.println("Tiempo generacion bobina: " + this.tiempogeneracionbobina);
-        System.out.println("Tamaño delays: " + delays.size());
-        System.out.println("Factor Delay: " + (bobina/tiempogeneracionbobina));
-
-        printCoils();
-
-        Thread.sleep(5000);
-
-
-        Thread.sleep(2500);
-
+        getProductionTimeDelays();
+        publishCoilsKafka();
         this.tiempogeneracionbobina = 0.0;
-        delays.clear();
+        stoptimers.clear();
         coilsbuffer.clear();
         xpositionsbuffer.clear();
     }
 
-    public void calculaDelays(){
+    public void getProductionTimeDelays(){
         int i = 0;
         double delay = 0.0;
-
         while ( i < xpositionsbuffer.size()-1){
             delay = xpositionsbuffer.get(i+1) - xpositionsbuffer.get(i);
-            this.delays.add(delay);
+            this.stoptimers.add(delay);
             this.tiempogeneracionbobina += delay;
             i++;
         }
     }
 
-    public void printCoils() throws InterruptedException {
+    public void publishCoilsKafka() throws InterruptedException {
 
-        int contadorestimestamp = 0;
+        contadorestimestamp = 0;
         int i = 0;
         int j = 0;
 
@@ -108,10 +88,7 @@ public class ProducerLogic {
         i++;
 
         while ( i < coilsbuffer.size()){
-            // System.out.println("Tiempo a parar enter envio de mensaje: " + delays.get(j));
-            // Thread.sleep((long)(xpositionsbuffer.get(j+1) - xpositionsbuffer.get(j)*(bobina%tiempogeneracionbobina)*1000));
-            ;
-            Thread.sleep((long) (delays.get(j) * (bobina/tiempogeneracionbobina)));
+            Thread.sleep((long) (stoptimers.get(j) * (bobina/tiempogeneracionbobina)));
             timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
             coilsbuffer.get(i-1).setTimeStamp(timeStamp);
             try {
@@ -126,9 +103,14 @@ public class ProducerLogic {
         }
 
         String timeStampFinBobina = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+    }
 
-        System.out.println("TimeStamp Inicio Bobina: " + timeStampInicioBobina);
-        System.out.println("TimeStamp Fin Bobina: " + timeStampFinBobina);
-        System.out.println("TimeStamps asigados a bobinas: " + contadorestimestamp);
+    public void printInfo(){
+        System.out.println("Tamaño buffer: " + coilsbuffer.size());
+        System.out.println("Tamaño posiciones x: " + xpositionsbuffer.size());
+        System.out.println("Tiempo generacion bobina: " + this.tiempogeneracionbobina);
+        System.out.println("Tamaño delays: " + stoptimers.size());
+        System.out.println("Factor Delay: " + (bobina/tiempogeneracionbobina));
+        System.out.println("timeStamps Asignados: " + contadorestimestamp);
     }
 }

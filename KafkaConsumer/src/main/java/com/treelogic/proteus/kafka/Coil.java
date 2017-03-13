@@ -1,8 +1,4 @@
 package com.treelogic.proteus.kafka;
-
-/**
- * created by pablo.mesa on 2/02/17.
- */
 public class Coil {
 
 
@@ -16,6 +12,8 @@ public class Coil {
     public Double c0031, c0032, c0033, c0034, c0035, c0036, c0037, c0038, c0039, c0040;
     public Double c0041, c0042, c0043, c0044, c0045, c0046, c0047, c0048, c0049, c0050;
     public Double c0051, c0052, c0053, c0054, c0055, c0056;
+
+    public String timeStamp;
 
 
     public Coil(){};
@@ -86,6 +84,8 @@ public class Coil {
         this.c0054 = c0054;
         this.c0055 = c0055;
         this.c0056 = c0056;
+
+        this.timeStamp = null;
     }
 
     // Getters
@@ -156,6 +156,7 @@ public class Coil {
     public Double getc0055(){ return c0055;}
     public Double getc0056(){ return c0056;}
 
+    public String getTimeStamp(){ return timeStamp;}
 
     // Setters
 
@@ -224,6 +225,8 @@ public class Coil {
     public void setc0054(Double c0054){ this.c0054 = c0054;}
     public void setc0055(Double c0055){ this.c0055 = c0055;}
     public void setc0056(Double c0056){ this.c0056 = c0056;}
+
+    public void setTimeStamp(String timeStamp){ this.timeStamp = timeStamp;}
 
 
     public Coil generateCoilObject(String[] mensaje){
@@ -310,4 +313,7 @@ public class Coil {
 
         return bobina;
     }
+
+
+
 }

@@ -54,9 +54,6 @@ public class KafkaConsumer {
 
                 String message = mapper.writeValueAsString(coil);
 
-                System.out.println("Linea formateada: " + coil.getTimeStamp());
-                System.out.println("Mensaje: " + message);
-
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {

@@ -21,15 +21,19 @@ public class ProducerLogic {
     Double COIL_SPEED = 120000.0;
     Integer contadorestimestamp;
     public Producer<String, String> productor;
-    String PROTEUS_KAFKA_TOPIC = "test-timestamp";
+    public String PROTEUS_KAFKA_TOPIC = "";
     private static ObjectMapper mapper = new ObjectMapper();
 
+
+
     ProducerLogic(){}
+
+    public void setTopic(String topic){ this.PROTEUS_KAFKA_TOPIC = topic; }
 
     public void buffer(Coil coil, Producer<String,String> producer, String topic, Double COIL_SPEED) throws InterruptedException {
 
         this.COIL_SPEED = COIL_SPEED;
-        this.PROTEUS_KAFKA_TOPIC = topic;
+        setTopic(topic);
         this.productor = producer;
         Integer idcoil = coil.getID();
 

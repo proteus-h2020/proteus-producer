@@ -18,7 +18,7 @@ public class ProducerLogic {
     Integer identificadorbobina = Integer.MIN_VALUE;
     ArrayList<Double> stoptimers = new ArrayList<>();
     Double tiempogeneracionbobina = 0.0;
-    Double bobina = 120000.0;
+    Double COIL_SPEED = 120000.0;
     Integer contadorestimestamp;
     public Producer<String, String> productor;
     String PROTEUS_KAFKA_TOPIC = "test-timestamp";
@@ -26,8 +26,9 @@ public class ProducerLogic {
 
     ProducerLogic(){}
 
-    public void buffer(Coil coil, Producer<String,String> producer, String topic) throws InterruptedException {
+    public void buffer(Coil coil, Producer<String,String> producer, String topic, Double COIL_SPEED) throws InterruptedException {
 
+        this.COIL_SPEED = COIL_SPEED;
         this.PROTEUS_KAFKA_TOPIC = topic;
         this.productor = producer;
         Integer idcoil = coil.getID();
@@ -88,7 +89,7 @@ public class ProducerLogic {
         i++;
 
         while ( i < coilsbuffer.size()){
-            Thread.sleep((long) (stoptimers.get(j) * (bobina/tiempogeneracionbobina)));
+            Thread.sleep((long) (stoptimers.get(j) * (COIL_SPEED/tiempogeneracionbobina)));
             timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
             coilsbuffer.get(i-1).setTimeStamp(timeStamp);
             try {
@@ -110,7 +111,7 @@ public class ProducerLogic {
         System.out.println("Tamaño posiciones x: " + xpositionsbuffer.size());
         System.out.println("Tiempo generacion bobina: " + this.tiempogeneracionbobina);
         System.out.println("Tamaño delays: " + stoptimers.size());
-        System.out.println("Factor Delay: " + (bobina/tiempogeneracionbobina));
+        System.out.println("Factor Delay: " + (COIL_SPEED/tiempogeneracionbobina));
         System.out.println("timeStamps Asignados: " + contadorestimestamp);
     }
 }

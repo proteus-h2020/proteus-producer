@@ -25,16 +25,26 @@ import java.util.Properties;
 public class ProteusKafkaProducer {
 
 	public static String HDFS_URI = "hdfs://192.168.4.245:8020";
-	public static String PROTEUS_KAFKA_TOPIC = "test-timestamp";
+	public static String PROTEUS_KAFKA_TOPIC = "proteus";
 	public static String PROTEUS_MERGED_TABLE = "/proteus/final/sorted/000000_0";
+	public static Double COIL_SPEED = 120000.0;
 
 	private static final Logger logger = LoggerFactory.getLogger(ProteusKafkaProducer.class);
 	private static Producer<String, String> producer;
 
 	public static void main(String[] args) throws IOException {
-		
+
+		try {
+			if ( !args[0].isEmpty() ) PROTEUS_KAFKA_TOPIC = args[0];
+			if ( !args[1].isEmpty() ) COIL_SPEED = Double.parseDouble(args[1]) * 1000;
+		} catch (Exception e){
+		}
+
 		logger.info("Starting Proteus Kafka producer...");
-		
+		logger.info("Kafka Topic: " + PROTEUS_KAFKA_TOPIC);
+		logger.info("Coil production speed: " + COIL_SPEED);
+
+
 		int loopIteration = 1;
 		Properties properties = new Properties();
 		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -82,7 +92,7 @@ public class ProteusKafkaProducer {
 
 					String [] mensaje = line.split(",");
 					Coil coil = new Coil().generateCoilObject(mensaje);
-					logic.buffer(coil, producer, PROTEUS_KAFKA_TOPIC);
+					logic.buffer(coil, producer, PROTEUS_KAFKA_TOPIC, COIL_SPEED);
 					line = br.readLine();
 
 				}

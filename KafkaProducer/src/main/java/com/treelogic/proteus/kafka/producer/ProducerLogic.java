@@ -23,6 +23,9 @@ public class ProducerLogic {
     public Producer<String, String> productor;
     public String PROTEUS_KAFKA_TOPIC = "";
     private static ObjectMapper mapper = new ObjectMapper();
+    String timeStampInicioBobina;
+    String timeStampFinBobina;
+
 
 
 
@@ -36,6 +39,7 @@ public class ProducerLogic {
         setTopic(topic);
         this.productor = producer;
         Integer idcoil = coil.getID();
+
 
         if ( identificadorbobina.equals(idcoil)){
             generarBufferBobinas(coil);
@@ -54,6 +58,7 @@ public class ProducerLogic {
         getProductionTimeDelays();
         publishCoilsKafka();
         this.tiempogeneracionbobina = 0.0;
+
         stoptimers.clear();
         coilsbuffer.clear();
         xpositionsbuffer.clear();
@@ -63,11 +68,13 @@ public class ProducerLogic {
         int i = 0;
         double delay = 0.0;
         while ( i < xpositionsbuffer.size()-1){
+
             delay = xpositionsbuffer.get(i+1) - xpositionsbuffer.get(i);
             this.stoptimers.add(delay);
             this.tiempogeneracionbobina += delay;
             i++;
         }
+
     }
 
     public void publishCoilsKafka() throws InterruptedException {
@@ -76,7 +83,8 @@ public class ProducerLogic {
         int i = 0;
         int j = 0;
 
-        String timeStampInicioBobina = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        timeStampInicioBobina = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 
         coilsbuffer.get(i).setTimeStamp(timeStamp);
@@ -86,7 +94,7 @@ public class ProducerLogic {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        Thread.sleep(5000);
+
         productor.send(new ProducerRecord<String, String>(PROTEUS_KAFKA_TOPIC, message));
 
         contadorestimestamp++;
@@ -107,15 +115,26 @@ public class ProducerLogic {
             j++;
         }
 
-        String timeStampFinBobina = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        timeStampFinBobina = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+
+        System.out.println("Inicio: " + timeStampInicioBobina + ", Fin: " + timeStampFinBobina);
+
+
+
     }
 
     public void printInfo(){
-        System.out.println("Tamaño buffer: " + coilsbuffer.size());
-        System.out.println("Tamaño posiciones x: " + xpositionsbuffer.size());
-        System.out.println("Tiempo generacion bobina: " + this.tiempogeneracionbobina);
-        System.out.println("Tamaño delays: " + stoptimers.size());
-        System.out.println("Factor Delay: " + (COIL_SPEED/tiempogeneracionbobina));
+        System.out.println("Variables globales");
+        System.out.println("COIL SPEED: " + this.COIL_SPEED);
+        System.out.println("TOPIC: " + this.PROTEUS_KAFKA_TOPIC);
+        System.out.println("Info Bobina");
+        System.out.println("Tamaño Buffer de la bobina: " + coilsbuffer.size());
+        System.out.println("Tamaño Posiciones X de la bobina: " + xpositionsbuffer.size());
+        System.out.println("Tiempo generación de la bobina: " + tiempogeneracionbobina);
+        System.out.println("Tamaño vector delays (buffer - 1): " + stoptimers.size());
+        System.out.println("Factor delay a multiplicar por vector_delay[i]: " + (COIL_SPEED/tiempogeneracionbobina));
         System.out.println("timeStamps Asignados: " + contadorestimestamp);
+        System.out.println("timeStampInicioBobina: " + timeStampInicioBobina);
+        System.out.println("timeStampFinBobina: " + timeStampFinBobina);
     }
 }

@@ -1,6 +1,5 @@
 package com.treelogic.proteus.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,7 +17,7 @@ public class KafkaConsumer {
 
     private ApplicationEventPublisher applicationEventPublisher = null;
     private static Properties kafkaProperties;
-    public static String PROTEUS_KAFKA_TOPIC = "test-timestamp";
+    public static String PROTEUS_KAFKA_TOPIC = "";
     private static ObjectMapper mapper = new ObjectMapper();
 
     public static void main(String[] args) throws IOException {

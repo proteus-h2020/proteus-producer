@@ -1,5 +1,6 @@
 package com.treelogic.proteus.kafka.producer;
 
+import org.apache.hadoop.fs.BlockLocation;
 import org.apache.htrace.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -26,16 +27,42 @@ public class ProteusKafkaProducer {
 	public static String PROTEUS_MERGED_TABLE = "/proteus/final/sorted/000000_0";
 	public static Double COIL_SPEED = 120000.0;
 
+	public static String timeStampInicio;
+	public static String timeStampFinal;
+
 	private static final Logger logger = LoggerFactory.getLogger(ProteusKafkaProducer.class);
 	private static Producer<String, String> producer;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 
 		try {
 			if ( !args[0].isEmpty() ) PROTEUS_KAFKA_TOPIC = args[0];
 			if ( !args[1].isEmpty() ) COIL_SPEED = Double.parseDouble(args[1]) * 1000;
 		} catch (Exception e){
 		}
+
+
+		// Configuracion HDFS
+
+		Configuration conf = new Configuration();
+
+		conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+		conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
+
+		FileSystem fs = FileSystem.get(URI.create(HDFS_URI), conf);
+
+
+		// Preprocessing
+
+		/*
+		preprocessingOffsets prep = new preprocessingOffsets("bloque2", 2, fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf);
+		preprocessingOffsets prep2 = new preprocessingOffsets("bloque170", 170, fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf);
+
+		prep.start();
+		prep2.start();
+		*/
+
+		// Launch Kafka Producer
 
 		logger.info("Starting Proteus Kafka producer...");
 		logger.info("Kafka Topic: " + PROTEUS_KAFKA_TOPIC);
@@ -55,14 +82,6 @@ public class ProteusKafkaProducer {
 
 		producer = new KafkaProducer<>(properties);
 
-		// Configuracion HDFS
-
-		Configuration conf = new Configuration();
-
-		conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
-		conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
-
-		FileSystem fs = FileSystem.get(URI.create(HDFS_URI), conf);
 
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -72,6 +91,9 @@ public class ProteusKafkaProducer {
 		ProducerLogic logic = new ProducerLogic();
 
 		// Read line by line HDFS
+
+		timeStampInicio = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+		System.out.println("Inicio: " + timeStampInicio );
 
 		while (true) {
 			logger.info("Starting a new kafka iteration over the HDFS: ", (loopIteration++));
@@ -88,14 +110,17 @@ public class ProteusKafkaProducer {
 				while (line != null) {
 
 					String [] mensaje = line.split(",");
-					Coil coil = new Coil().generateCoilObject(mensaje);
-					logic.buffer(coil, producer, PROTEUS_KAFKA_TOPIC, COIL_SPEED);
+					//Coil coil = new Coil().generateCoilObject(mensaje);
+					//logic.buffer(coil, producer, PROTEUS_KAFKA_TOPIC, COIL_SPEED);
 					line = br.readLine();
 
 				}
 			} catch (Exception e) {
 				logger.error("Error in the Proteus Kafka producer", e);
 			}
+
+			timeStampFinal = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+			System.out.println("Final: " + timeStampFinal);
 		}
 	}
 

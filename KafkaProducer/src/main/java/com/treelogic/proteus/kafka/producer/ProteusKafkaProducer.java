@@ -52,15 +52,23 @@ public class ProteusKafkaProducer {
 		FileSystem fs = FileSystem.get(URI.create(HDFS_URI), conf);
 
 
-		// Preprocessing
+		// ThreadsFactory
 
-		/*
 		preprocessingOffsets prep = new preprocessingOffsets("bloque2", 2, fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf);
 		preprocessingOffsets prep2 = new preprocessingOffsets("bloque170", 170, fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf);
 
-		prep.start();
-		prep2.start();
-		*/
+		preprocessingOffsets[] threads = new preprocessingOffsets[2];
+		int[] bloques = new int[2];
+
+		bloques[0] = 2;
+		bloques[1] = 170;
+
+		for ( int i = 0; i < threads.length; i++){
+			threads[i] = new preprocessingOffsets("bloque" + bloques[i], bloques[i], fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf);
+			threads[i].start();
+		}
+
+		// End ThreadsFactory
 
 		// Launch Kafka Producer
 

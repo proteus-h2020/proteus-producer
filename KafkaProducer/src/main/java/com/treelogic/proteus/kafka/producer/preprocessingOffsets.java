@@ -104,7 +104,7 @@ public class preprocessingOffsets implements Runnable {
             InputStream is = new BoundedInputStream(fsin, fileSplit.getLength());
 
             int i = 0;
-            while ( i < 100){
+            while (true){
                 byte[] buffer = new byte[60];
                 is.read(buffer, 0, 60);
                 String text = new String(buffer, "UTF-8");

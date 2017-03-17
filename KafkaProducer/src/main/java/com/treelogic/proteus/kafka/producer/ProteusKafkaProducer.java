@@ -1,6 +1,5 @@
 package com.treelogic.proteus.kafka.producer;
 
-import org.apache.hadoop.fs.BlockLocation;
 import org.apache.htrace.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -26,6 +25,7 @@ public class ProteusKafkaProducer {
 	public static String PROTEUS_KAFKA_TOPIC = "proteus";
 	public static String PROTEUS_MERGED_TABLE = "/proteus/final/sorted/000000_0";
 	public static Double COIL_SPEED = 120000.0;
+	public static Integer KAFKA_PRODUCERS = 10;
 
 	public static String timeStampInicio;
 	public static String timeStampFinal;
@@ -42,7 +42,7 @@ public class ProteusKafkaProducer {
 		}
 
 
-		// Configuracion HDFS
+		/* HDFS Configuration */
 
 		Configuration conf = new Configuration();
 
@@ -51,24 +51,23 @@ public class ProteusKafkaProducer {
 
 		FileSystem fs = FileSystem.get(URI.create(HDFS_URI), conf);
 
+		/* END - HDFS Configuration */
 
-		// ThreadsFactory
 
-		preprocessingOffsets prep = new preprocessingOffsets("bloque2", 2, fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf);
-		preprocessingOffsets prep2 = new preprocessingOffsets("bloque170", 170, fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf);
+		/* Offsets file */
 
-		preprocessingOffsets[] threads = new preprocessingOffsets[2];
-		int[] bloques = new int[2];
+		CoilOffsetsLenghtsFile coilsfile = new CoilOffsetsLenghtsFile(fs, HDFS_URI, PROTEUS_MERGED_TABLE);
+		coilsfile.createOffsetsLenghtsFile();
 
-		bloques[0] = 2;
-		bloques[1] = 170;
+		/* END - Offsets file */
 
-		for ( int i = 0; i < threads.length; i++){
-			threads[i] = new preprocessingOffsets("bloque" + bloques[i], bloques[i], fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf);
-			threads[i].start();
-		}
+		/* ThreadsFactory */
 
-		// End ThreadsFactory
+		KafkaProducersFactory producers = new KafkaProducersFactory();
+		producers.setConfiguration(fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf);
+		producers.createProducers(KAFKA_PRODUCERS);
+
+		/* End ThreadsFactory */
 
 		// Launch Kafka Producer
 

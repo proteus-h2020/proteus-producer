@@ -3,6 +3,7 @@ package com.treelogic.proteus.kafka.producer;
 /**
  * created by pablo.mesa on 2/02/17.
  */
+
 public class Coil {
 
 
@@ -317,7 +318,6 @@ public class Coil {
 
         return bobina;
     }
-
 
 
 }

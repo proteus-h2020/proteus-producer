@@ -31,7 +31,7 @@ import static com.treelogic.proteus.kafka.producer.ProteusKafkaProducer.PROTEUS_
 /**
  * Created by pablo.mesa on 16/03/17.
  */
-public class preprocessingOffsets implements Runnable {
+public class KafkaProducerThread implements Runnable {
 
     public FileSystem fs;
     public String HDFS;
@@ -41,9 +41,9 @@ public class preprocessingOffsets implements Runnable {
     private Thread t;
     private int block;
 
-    preprocessingOffsets(){}
+    KafkaProducerThread(){}
 
-    preprocessingOffsets(String Threadname, int block, FileSystem fs, String HDFS_URI, String TABLE, Configuration conf){
+    KafkaProducerThread(String Threadname, int block, FileSystem fs, String HDFS_URI, String TABLE, Configuration conf){
         this.Threadname = Threadname;
         this.fs = fs;
         this.HDFS = HDFS_URI;

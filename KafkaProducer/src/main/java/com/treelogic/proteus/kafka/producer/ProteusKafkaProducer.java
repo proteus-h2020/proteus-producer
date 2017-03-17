@@ -53,7 +53,6 @@ public class ProteusKafkaProducer {
 
 		/* END - HDFS Configuration */
 
-
 		/* Offsets file */
 
 		CoilOffsetsLenghtsFile coilsfile = new CoilOffsetsLenghtsFile(fs, HDFS_URI, PROTEUS_MERGED_TABLE);

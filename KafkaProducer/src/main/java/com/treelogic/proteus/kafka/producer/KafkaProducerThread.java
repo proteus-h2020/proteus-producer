@@ -7,41 +7,23 @@ import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-import static java.lang.Math.incrementExact;
-import static java.lang.Math.toIntExact;
-
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
-import org.apache.hadoop.io.DataInputByteBuffer;
-import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.mapred.FileSplit;
-import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec;
 
 import java.io.*;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.treelogic.proteus.kafka.producer.ProteusKafkaProducer.HDFS_URI;
-import static com.treelogic.proteus.kafka.producer.ProteusKafkaProducer.PROTEUS_MERGED_TABLE;
 
 /**
  * Created by pablo.mesa on 16/03/17.
  */
 public class KafkaProducerThread implements Runnable {
 
-    public FileSystem fs;
-    public String HDFS;
-    public String TABLE;
-    public Configuration conf;
-    private String Threadname;
-    private Thread t;
-    private int block;
+    protected FileSystem fs;
+    protected String HDFS;
+    protected String TABLE;
+    protected Configuration conf;
+    protected String Threadname;
+    protected Thread t;
+    protected int block;
 
-    KafkaProducerThread(){}
 
     KafkaProducerThread(String Threadname, int block, FileSystem fs, String HDFS_URI, String TABLE, Configuration conf){
         this.Threadname = Threadname;
@@ -54,15 +36,15 @@ public class KafkaProducerThread implements Runnable {
     }
 
     public long getLengthFile() throws IOException {
-        return fs.getFileStatus(new Path(HDFS_URI + TABLE)).getLen();
+        return fs.getFileStatus(new Path(HDFS + TABLE)).getLen();
     }
 
     public long getBlockSize() throws IOException {
-        return fs.getDefaultBlockSize(new Path(HDFS_URI + TABLE));
+        return fs.getDefaultBlockSize(new Path(HDFS + TABLE));
     }
 
     public BlockLocation[] getBlocks() throws IOException {
-        return fs.getFileBlockLocations(new Path(HDFS_URI + TABLE), 0, getLengthFile());
+        return fs.getFileBlockLocations(new Path(HDFS + TABLE), 0, getLengthFile());
     }
 
     public void getSpecificBlock() throws IOException {
@@ -88,10 +70,23 @@ public class KafkaProducerThread implements Runnable {
 
     public void readSpecificBlock(int numerodebloque) throws IOException, InterruptedException {
 
+            File f = new File("/home/pablo.mesa/Escritorio/PROTEUS-OFFSETS.csv");
+            if(f.exists() && !f.isDirectory()) {
+                System.out.println("Existe el fichero");
+                BufferedReader br = new BufferedReader(new FileReader(f));
+                String line = br.readLine();
+                line = br.readLine();
+
+                System.out.println("line");
+
+                String[] direccion = line.split(",");
+                String tamcoil = direccion[1];
+                String tamlinea = direccion[2];
+
+            }
+
             BlockLocation[] blocklist = getBlocks();
 
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(fs.open(new Path(HDFS + TABLE))));
 
             FileSplit fileSplit = new FileSplit(new Path(HDFS + TABLE), blocklist[numerodebloque].getOffset(), blocklist[numerodebloque].getLength(), blocklist[numerodebloque].getHosts());
 

@@ -1,4 +1,4 @@
-package com.treelogic.proteus.kafka.producer;
+package com.treelogic.proteus.kafka.offsets;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

@@ -1,4 +1,4 @@
-package com.treelogic.proteus.kafka.producer;
+package com.treelogic.proteus.kafka.model;
 
 /**
  * created by pablo.mesa on 2/02/17.

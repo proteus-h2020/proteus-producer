@@ -1,5 +1,6 @@
 package com.treelogic.proteus.kafka.producer;
 
+import com.treelogic.proteus.kafka.model.Coil;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import com.fasterxml.jackson.core.JsonProcessingException;

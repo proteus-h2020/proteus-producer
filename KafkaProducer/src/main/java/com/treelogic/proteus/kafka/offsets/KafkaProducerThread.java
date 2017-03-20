@@ -1,4 +1,4 @@
-package com.treelogic.proteus.kafka.producer;
+package com.treelogic.proteus.kafka.offsets;
 
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.hadoop.conf.Configuration;
@@ -39,55 +39,63 @@ public class KafkaProducerThread implements Runnable {
         return fs.getFileStatus(new Path(HDFS + TABLE)).getLen();
     }
 
-    public long getBlockSize() throws IOException {
-        return fs.getDefaultBlockSize(new Path(HDFS + TABLE));
-    }
-
     public BlockLocation[] getBlocks() throws IOException {
         return fs.getFileBlockLocations(new Path(HDFS + TABLE), 0, getLengthFile());
     }
 
-    public void getSpecificBlock() throws IOException {
+    protected String tamcoil;
+    protected String tamlinea;
 
-        BlockLocation[] blocklist = getBlocks();
-        int i = 0;
+    public Integer getCoilSizeForOffsetsCalculation() throws IOException {
 
-        while ( i < blocklist.length ){
-            System.out.println("Block[" + i + "]: " + blocklist[i].getHosts());
-            i++;
+        File f = new File("/home/pablo.mesa/Escritorio/PROTEUS-OFFSETS.csv");
+        if(f.exists() && !f.isDirectory()) {
+            System.out.println("Existe el fichero");
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String line = br.readLine();
+            line = br.readLine();
+
+            System.out.println("line");
+
+            String[] direccion = line.split(",");
+            tamcoil = direccion[1];
+            tamlinea = direccion[2];
+
+            System.out.println("tam coil: " + tamcoil);
+            System.out.println("tam linea: " + tamlinea);
+
+
+
         }
+        else {
+            System.out.println("No existe");
+        }
+
+        return Integer.valueOf(tamcoil);
 
     }
 
-    public void getBlocksOffsets() throws IOException {
-        BlockLocation[] blocklist = getBlocks();
-        int i = 0;
-        while ( i < blocklist.length ){
-            System.out.println("Offset Block[" + i + "]: " + blocklist[i].getOffset());
-            i++;
-        }
+    public String[] getCoilUbications() throws IOException {
+
+        String[] host_ubications = new String[10];
+        // Tamaño
+
+        int tam = getCoilSizeForOffsetsCalculation();
+
+        // Calcular en que bloques está
+
+
+        // Añadir los bloques en los que está al arry host_ubications
+
+        // Retornar
+
+        return host_ubications;
     }
+
 
     public void readSpecificBlock(int numerodebloque) throws IOException, InterruptedException {
 
-            File f = new File("/home/pablo.mesa/Escritorio/PROTEUS-OFFSETS.csv");
-            if(f.exists() && !f.isDirectory()) {
-                System.out.println("Existe el fichero");
-                BufferedReader br = new BufferedReader(new FileReader(f));
-                String line = br.readLine();
-                line = br.readLine();
-
-                System.out.println("line");
-
-                String[] direccion = line.split(",");
-                String tamcoil = direccion[1];
-                String tamlinea = direccion[2];
-
-            }
-
             BlockLocation[] blocklist = getBlocks();
-
-
             FileSplit fileSplit = new FileSplit(new Path(HDFS + TABLE), blocklist[numerodebloque].getOffset(), blocklist[numerodebloque].getLength(), blocklist[numerodebloque].getHosts());
 
             FSDataInputStream fsin = fs.open(fileSplit.getPath());
@@ -112,6 +120,8 @@ public class KafkaProducerThread implements Runnable {
     public void run(){
         System.out.println("My thread is in running state.");
         try {
+
+
             readSpecificBlock(this.block);
         } catch (IOException e) {
             e.printStackTrace();
@@ -124,5 +134,40 @@ public class KafkaProducerThread implements Runnable {
         t = new Thread(this, Threadname);
         t.start();
     }
+
+
+
+
+    ///////
+
+
+    public void getSpecificBlock() throws IOException {
+
+        BlockLocation[] blocklist = getBlocks();
+        int i = 0;
+
+        while ( i < blocklist.length ){
+            System.out.println("Block[" + i + "]: " + blocklist[i].getHosts());
+            i++;
+        }
+
+    }
+
+    public void getBlocksOffsets() throws IOException {
+        BlockLocation[] blocklist = getBlocks();
+        int i = 0;
+        while ( i < blocklist.length ){
+            System.out.println("Offset Block[" + i + "]: " + blocklist[i].getOffset());
+            i++;
+        }
+    }
+
+
+    public long getBlockSize() throws IOException {
+        return fs.getDefaultBlockSize(new Path(HDFS + TABLE));
+    }
+
+
+
 
 }

@@ -1,5 +1,6 @@
 package com.treelogic.proteus.kafka.producer;
 
+import com.treelogic.proteus.kafka.offsets.KafkaProducersFactory;
 import org.apache.htrace.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -55,8 +56,8 @@ public class ProteusKafkaProducer {
 
 		/* Offsets file */
 
-		CoilOffsetsLenghtsFile coilsfile = new CoilOffsetsLenghtsFile(fs, HDFS_URI, PROTEUS_MERGED_TABLE);
-		coilsfile.createOffsetsLenghtsFile();
+		//CoilOffsetsLenghtsFile coilsfile = new CoilOffsetsLenghtsFile(fs, HDFS_URI, PROTEUS_MERGED_TABLE);
+		//coilsfile.createOffsetsLenghtsFile();
 
 		/* END - Offsets file */
 

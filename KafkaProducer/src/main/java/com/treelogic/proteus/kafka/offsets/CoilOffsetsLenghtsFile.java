@@ -1,6 +1,7 @@
-package com.treelogic.proteus.kafka.producer;
+package com.treelogic.proteus.kafka.offsets;
 
 import com.arturmkrtchyan.sizeof4j.SizeOf;
+import com.treelogic.proteus.kafka.model.Coil;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;

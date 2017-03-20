@@ -140,6 +140,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!--- Add dependency for object sizes -->
+		<dependency>
+			<groupId>com.arturmkrtchyan.sizeof4j</groupId>
+			<artifactId>sizeof4j</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
 
 	</dependencies>
 </project>

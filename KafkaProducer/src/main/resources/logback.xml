@@ -13,19 +13,19 @@
         </rollingPolicy>
     </appender>
 
-    <root level="INFO">
+    <root level="ERROR">
         <appender-ref ref="FILEOUT"/>
     </root>
 
-    <logger name="com.treelogic.analytics.Application" level="WARN">
+    <logger name="com.treelogic.analytics.Application" level="ERROR">
         <appender-ref ref="FILEOUT"/>
     </logger>
 
-    <logger name="org.springframework.context.annotation.AnnotationConfigApplicationContext" level="WARN">
+    <logger name="org.springframework.context.annotation.AnnotationConfigApplicationContext" level="ERROR">
         <appender-ref ref="FILEOUT"/>
     </logger>
 
-    <logger name="org.springframework.jmx.export.annotation.AnnotationMBeanExporter" level="WARN">
+    <logger name="org.springframework.jmx.export.annotation.AnnotationMBeanExporter" level="ERROR">
         <appender-ref ref="FILEOUT"/>
     </logger>
 

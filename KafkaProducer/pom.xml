@@ -18,7 +18,7 @@
       <configuration>
         <archive>
           <manifest>
-            <mainClass>com.treelogic.proteus.kafka.producer.ProteusKafkaProducer</mainClass>
+            <mainClass>com.treelogic.proteus.kafka.producer.Proteus</mainClass>
           </manifest>
         </archive>
         <descriptorRefs>

@@ -2,7 +2,6 @@ package com.treelogic.proteus.kafka.producer;
 
 import com.treelogic.proteus.kafka.offsets.KafkaProducersFactory;
 
-
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -27,6 +26,7 @@ public class Proteus {
 		try {
 			if ( !args[0].isEmpty() ) PROTEUS_KAFKA_TOPIC = args[0];
 			if ( !args[1].isEmpty() ) COIL_SPEED = Double.parseDouble(args[1]) * 1000;
+			if ( !args[2].isEmpty() ) KAFKA_PRODUCERS = Integer.parseInt(args[2]);
 		} catch (Exception e){
 		}
 

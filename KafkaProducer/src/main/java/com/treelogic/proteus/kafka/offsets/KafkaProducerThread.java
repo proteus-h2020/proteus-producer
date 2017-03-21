@@ -3,7 +3,7 @@ package com.treelogic.proteus.kafka.offsets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.treelogic.proteus.kafka.model.Coil;
 import com.treelogic.proteus.kafka.producer.ProducerLogic;
-import com.treelogic.proteus.kafka.producer.ProteusKafkaProducer;
+import com.treelogic.proteus.kafka.producer.Proteus;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -37,9 +37,7 @@ public class KafkaProducerThread implements Runnable {
     protected double COIL_SPEED;
     private static Producer<String, String> producer;
 
-    private static final Logger logger = LoggerFactory.getLogger(ProteusKafkaProducer.class);
-
-
+    private static final Logger logger = LoggerFactory.getLogger(Proteus.class);
 
     KafkaProducerThread(String Threadname, int thread_num, FileSystem fs, String HDFS_URI, String TABLE, Configuration conf, ArrayList<Integer> ids, int chunk, double COIL_SPEED) {
         this.Threadname = Threadname;

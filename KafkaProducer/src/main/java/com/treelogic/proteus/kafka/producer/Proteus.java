@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class ProteusKafkaProducer {
+public class Proteus {
 
 	public static String HDFS_URI = "hdfs://192.168.4.245:8020";
 	public static String PROTEUS_KAFKA_TOPIC = "proteus";

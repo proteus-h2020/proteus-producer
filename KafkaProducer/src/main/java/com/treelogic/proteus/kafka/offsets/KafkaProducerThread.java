@@ -1,15 +1,24 @@
 package com.treelogic.proteus.kafka.offsets;
 
-import org.apache.commons.io.input.BoundedInputStream;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.treelogic.proteus.kafka.model.Coil;
+import com.treelogic.proteus.kafka.producer.ProducerLogic;
+import com.treelogic.proteus.kafka.producer.ProteusKafkaProducer;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.BlockLocation;
-import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-import org.apache.hadoop.mapred.FileSplit;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Created by pablo.mesa on 16/03/17.
@@ -22,18 +31,112 @@ public class KafkaProducerThread implements Runnable {
     protected Configuration conf;
     protected String Threadname;
     protected Thread t;
-    protected int block;
+    protected int thread_num;
+    protected ArrayList<Integer> coilsId;
+    protected int chunk;
+    protected double COIL_SPEED;
+    private static Producer<String, String> producer;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProteusKafkaProducer.class);
 
 
-    KafkaProducerThread(String Threadname, int block, FileSystem fs, String HDFS_URI, String TABLE, Configuration conf){
+
+    KafkaProducerThread(String Threadname, int thread_num, FileSystem fs, String HDFS_URI, String TABLE, Configuration conf, ArrayList<Integer> ids, int chunk, double COIL_SPEED) {
         this.Threadname = Threadname;
         this.fs = fs;
         this.HDFS = HDFS_URI;
         this.TABLE = TABLE;
         this.conf = conf;
-        this.block = block;
+        this.thread_num = thread_num;
+        this.coilsId = ids;
+        this.chunk = chunk;
+        this.COIL_SPEED = COIL_SPEED;
 
     }
+
+    public void run(){
+        System.out.println("My thread is in running state.");
+        try {
+
+            String timeStampInicio;
+            String timeStampFinal;
+
+            logger.info("Starting Proteus Kafka producer...");
+
+            int loopIteration = 1;
+            Properties properties = new Properties();
+            properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                    "192.168.4.246:6667,192.168.4.247:6667,192.168.4.248:6667");
+            properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                    "org.apache.kafka.common.serialization.StringSerializer");
+            properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                    "org.apache.kafka.common.serialization.StringSerializer");
+            properties.put(ProducerConfig.ACKS_CONFIG, "all");
+            properties.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 100);
+
+            producer = new KafkaProducer<>(properties);
+
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a z");
+            mapper.setDateFormat(df);
+
+            ProducerLogic logic = new ProducerLogic();
+
+            // Read line by line HDFS
+
+            timeStampInicio = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+
+
+            while (true) {
+                logger.info("Starting a new kafka iteration over the HDFS: ", (loopIteration++));
+                for ( int i = chunk*thread_num; i < (chunk*thread_num)+chunk; i++){
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(fs.open(new Path(HDFS + "/proteus/split/proteus-awk/COIL-" + coilsId.get(i) + ".csv"))));
+
+                try {
+                    // La primera línea del CSV es una cabecera
+                    String line = br.readLine();
+
+                    // Primera linea a procesar
+                    line = br.readLine();
+                    while (line != null) {
+
+                        /*****************************
+
+                        AÑADIR LA LOGICA DE LOS TOPICS
+
+                         ****************************/
+                        String[] mensaje = line.split(",");
+                        Coil coil = new Coil().generateCoilObject(mensaje);
+                        logic.buffer(coil, producer, "proteus", COIL_SPEED);
+                        line = br.readLine();
+
+                    }
+                } catch (Exception e) {
+                    logger.error("Error in the Proteus Kafka producer", e);
+                }
+
+                timeStampFinal = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+
+            }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void start(){
+        t = new Thread(this, Threadname);
+        t.start();
+    }
+
+}
+
+
+    /*
 
     public long getLengthFile() throws IOException {
         return fs.getFileStatus(new Path(HDFS + TABLE)).getLen();
@@ -170,4 +273,4 @@ public class KafkaProducerThread implements Runnable {
 
 
 
-}
+*/

@@ -20,6 +20,8 @@ public class Coil {
 
     public String timeStamp;
 
+    public int[] coilsIDsFromFile;
+
 
     public Coil(){};
 
@@ -318,6 +320,7 @@ public class Coil {
 
         return bobina;
     }
+
 
 
 }

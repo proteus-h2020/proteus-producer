@@ -30,7 +30,7 @@ public class ProducerLogic {
 
 
 
-    ProducerLogic(){}
+    public ProducerLogic(){}
 
     public void setTopic(String topic){ this.PROTEUS_KAFKA_TOPIC = topic; }
 
@@ -118,7 +118,6 @@ public class ProducerLogic {
 
         timeStampFinBobina = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 
-        System.out.println("Inicio: " + timeStampInicioBobina + ", Fin: " + timeStampFinBobina);
 
 
 

@@ -11,20 +11,20 @@
 	</appender>
 	
 	<logger name="org.springframework.samples">
-		<level value="trace" />
+		<level value="error" />
 	</logger>
 
 	<logger name="org.springframework.web">
-		<level value="debug" />
+		<level value="error" />
 	</logger>
 
 	<logger name="org.springframework.web.socket">
-		<level value="trace" />
+		<level value="error" />
 	</logger>
 
 	<root>
 		<priority value="warn" />
-		<appender-ref ref="console" />
+		<appender-ref ref="error" />
 	</root>
 	
 </log4j:configuration>

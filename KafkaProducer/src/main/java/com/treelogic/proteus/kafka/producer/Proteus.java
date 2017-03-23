@@ -17,7 +17,7 @@ public class Proteus {
 	public static String PROTEUS_KAFKA_TOPIC = "proteus";
 	public static String PROTEUS_MERGED_TABLE = "/proteus/final/sorted/000000_0";
 	public static Double COIL_SPEED = 120000.0;
-	public static Integer KAFKA_PRODUCERS = 10;
+	public static Integer KAFKA_PRODUCERS = 100;
 	public static ArrayList<Integer> coilsIdentifiers;
 	public static Integer coilsbyproducer;
 
@@ -59,7 +59,7 @@ public class Proteus {
 
 		KafkaProducersFactory kafkafactory = new KafkaProducersFactory();
 		kafkafactory.setConfiguration(fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf, COIL_SPEED);
-		kafkafactory.createProducers(10, coilsIdentifiers, coilsbyproducer, COIL_SPEED);
+		kafkafactory.createProducers(KAFKA_PRODUCERS, coilsIdentifiers, coilsbyproducer, COIL_SPEED);
 
 		/* END - KafkaFactory */
 

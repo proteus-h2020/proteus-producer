@@ -19,7 +19,7 @@ public class KafkaAdmin {
         String zookeeperConnect = "clusteridi.slave01.treelogic.local:2181,clusteridi.slave02.treelogic.local:2181,clusteridi.slave03.treelogic.local:2181";
         int sessionTimeoutMs = 10 * 1000;
         int connectionTimeoutMs = 8 * 1000;
-        int partitions = 3;
+        int partitions = 1;
         int replication = 1;
 
         ZkClient zkClient = new ZkClient(

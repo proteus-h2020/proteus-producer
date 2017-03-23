@@ -18,6 +18,7 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -73,7 +74,7 @@ public class KafkaProducerThread implements Runnable {
             properties.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 100);
 
             producer = new KafkaProducer<>(properties);
-
+            KafkaAdmin kafkaAdmin = new KafkaAdmin();
 
             ObjectMapper mapper = new ObjectMapper();
 
@@ -86,31 +87,35 @@ public class KafkaProducerThread implements Runnable {
 
             timeStampInicio = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 
+            List<String> coilList = new ArrayList<String>();
 
             while (true) {
                 logger.info("Starting a new kafka iteration over the HDFS: ", (loopIteration++));
                 for ( int i = chunk*thread_num; i < (chunk*thread_num)+chunk; i++){
+
+                    String idCoil = Integer.toString(i);
+                    String topic = "COIL-" + coilsId.get(i);
+
+                    if (!coilList.contains(idCoil)) {
+                        kafkaAdmin.createTopic(topic);
+                        coilList.add(idCoil);
+                    }
+
                 BufferedReader br = new BufferedReader(
-                        new InputStreamReader(fs.open(new Path(HDFS + "/proteus/split/proteus-awk/COIL-" + coilsId.get(i) + ".csv"))));
+                        new InputStreamReader(fs.open(new Path(HDFS + "/proteus/split/proteus-awk/" + topic + ".csv"))));
 
                 try {
                     // La primera línea del CSV es una cabecera
-                    String line = br.readLine();
+                    //String line = br.readLine();
 
                     // Primera linea a procesar
-                    line = br.readLine();
+                    String line = br.readLine();
                     while (line != null) {
 
-                        /*****************************
-
-                        AÑADIR LA LOGICA DE LOS TOPICS
-
-                         ****************************/
                         String[] mensaje = line.split(",");
                         Coil coil = new Coil().generateCoilObject(mensaje);
-                        logic.buffer(coil, producer, "proteus", COIL_SPEED);
+                        logic.buffer(coil, producer,topic, COIL_SPEED);
                         line = br.readLine();
-
                     }
                 } catch (Exception e) {
                     logger.error("Error in the Proteus Kafka producer", e);

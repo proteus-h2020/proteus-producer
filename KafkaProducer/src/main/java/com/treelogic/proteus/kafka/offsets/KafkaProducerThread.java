@@ -91,13 +91,17 @@ public class KafkaProducerThread implements Runnable {
                 logger.info("Starting a new kafka iteration over the HDFS: ", (loopIteration++));
                 for ( int i = chunk*thread_num; i < (chunk*thread_num)+chunk; i++){
 
-                    String idCoil = Integer.toString(i);
+                    String idCoil = Integer.toString(coilsId.get(i));
                     String topic = "COIL-" + coilsId.get(i);
+
+                    logger.info("Thread[" + Threadname + "]: Producing Coil: " + idCoil + "  in topic " + topic);
 
                     if (!coilList.contains(idCoil)) {
                         kafkaAdmin.createTopic(topic);
                         coilList.add(idCoil);
                     }
+
+
 
                 BufferedReader br = new BufferedReader(
                         new InputStreamReader(fs.open(new Path(HDFS + "/proteus/final/proteus-split/" + topic + ".csv"))));
@@ -105,7 +109,6 @@ public class KafkaProducerThread implements Runnable {
                 try {
                     // La primera línea del CSV es una cabecera
                     //String line = br.readLine();
-
                     // Primera linea a procesar
                     String line = br.readLine();
                     while (line != null) {

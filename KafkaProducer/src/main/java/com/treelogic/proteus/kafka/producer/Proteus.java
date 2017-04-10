@@ -49,7 +49,6 @@ public class Proteus {
 
 		coilsbyproducer =  coilsIdentifiers.size() /  KAFKA_PRODUCERS;
 
-
 		/* END - Divide DataSet KafkaProducers */
 
 		/* KafkaFactory */

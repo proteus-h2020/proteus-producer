@@ -14,8 +14,6 @@ import java.util.ArrayList;
 public class Proteus {
 
 	public static String HDFS_URI = "hdfs://192.168.4.245:8020";
-	public static String PROTEUS_KAFKA_TOPIC = "proteus";
-	public static String PROTEUS_MERGED_TABLE = "/proteus/final/sorted/000000_0";
 	public static Double COIL_SPEED = 120000.0;
 	public static Integer KAFKA_PRODUCERS = 100;
 	public static ArrayList<Integer> coilsIdentifiers;
@@ -24,9 +22,8 @@ public class Proteus {
 	public static void main(String[] args) throws IOException, InterruptedException {
 
 		try {
-			if ( !args[0].isEmpty() ) PROTEUS_KAFKA_TOPIC = args[0];
-			if ( !args[1].isEmpty() ) COIL_SPEED = Double.parseDouble(args[1]) * 1000;
-			if ( !args[2].isEmpty() ) KAFKA_PRODUCERS = Integer.parseInt(args[2]);
+			if ( !args[0].isEmpty() ) COIL_SPEED = Double.parseDouble(args[1]) * 1000;
+			if ( !args[1].isEmpty() ) KAFKA_PRODUCERS = Integer.parseInt(args[2]);
 		} catch (Exception e){
 		}
 
@@ -58,7 +55,7 @@ public class Proteus {
 		/* KafkaFactory */
 
 		KafkaProducersFactory kafkafactory = new KafkaProducersFactory();
-		kafkafactory.setConfiguration(fs, HDFS_URI, PROTEUS_MERGED_TABLE, conf, COIL_SPEED);
+		kafkafactory.setConfiguration(fs, HDFS_URI, conf, COIL_SPEED);
 		kafkafactory.createProducers(KAFKA_PRODUCERS, coilsIdentifiers, coilsbyproducer, COIL_SPEED);
 
 		/* END - KafkaFactory */
@@ -70,7 +67,7 @@ public class Proteus {
 		ArrayList<Integer> coilsIdentifiers = new ArrayList<>();
 
 		BufferedReader coilsgetter = new BufferedReader(
-				new InputStreamReader(fs.open(new Path(HDFS_URI + "/proteus/final/coilbytable/000000_0"))));
+				new InputStreamReader(fs.open(new Path(HDFS_URI + "/proteus/final/COILSIDS.csv"))));
 
 		String linea = coilsgetter.readLine();
 

@@ -110,8 +110,6 @@ public class KafkaProducerThread implements Runnable {
                     String line = br.readLine();
                     while (line != null) {
 
-                        logger.info("Line: " + line);
-
                         String[] mensaje = line.split(",");
                         Coil coil = new Coil().generateCoilObject(mensaje);
                         logic.buffer(coil, producer,topic, COIL_SPEED);

@@ -14,7 +14,6 @@ public class KafkaProducersFactory {
 
     protected FileSystem fs;
     protected String HDFS;
-    protected String PROTEUS_TABLE;
     protected Configuration HDFS_CONF;
     protected double COIL_SPEED;
 
@@ -24,16 +23,15 @@ public class KafkaProducersFactory {
 
         KafkaProducerThread[] threads = new KafkaProducerThread[num_producers];
         for ( int i = 0; i < num_producers; i++){
-            threads[i] = new KafkaProducerThread("thread" + i, i, this.getFileSystem(), this.getHDFS(), this.getPROTEUS_TABLE(), this.getHDFS_CONF(), ids, chunk, COIL_SPEED);
+            threads[i] = new KafkaProducerThread("thread" + i, i, this.getFileSystem(), this.getHDFS(), this.getHDFS_CONF(), ids, chunk, COIL_SPEED);
             threads[i].start();
         }
 
     }
 
-    public void setConfiguration(FileSystem fs, String HDFS, String PROTEUS_TABLE, Configuration HDFS_CONF, double COIL_SPEED){
+    public void setConfiguration(FileSystem fs, String HDFS, Configuration HDFS_CONF, double COIL_SPEED){
         this.fs = fs;
         this.HDFS = HDFS;
-        this.PROTEUS_TABLE = PROTEUS_TABLE;
         this.HDFS_CONF = HDFS_CONF;
         this.COIL_SPEED = COIL_SPEED;
     }
@@ -46,10 +44,6 @@ public class KafkaProducersFactory {
 
     public String getHDFS(){
         return this.HDFS;
-    }
-
-    public String getPROTEUS_TABLE(){
-        return this.PROTEUS_TABLE;
     }
 
     public Configuration getHDFS_CONF(){

@@ -20,9 +20,6 @@ public class Coil {
 
     public String timeStamp;
 
-    public int[] coilsIDsFromFile;
-
-
     public Coil(){};
 
     public Coil(int id, Double positionX, Double positionY){

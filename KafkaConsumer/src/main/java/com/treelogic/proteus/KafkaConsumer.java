@@ -1,4 +1,4 @@
-package com.treelogic.proteus.kafka;
+package com.treelogic.proteus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

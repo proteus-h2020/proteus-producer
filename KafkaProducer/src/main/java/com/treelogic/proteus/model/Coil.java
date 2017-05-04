@@ -1,4 +1,9 @@
-package com.treelogic.proteus.kafka;
+package com.treelogic.proteus.model;
+
+/**
+ * created by pablo.mesa on 2/02/17.
+ */
+
 public class Coil {
 
 
@@ -14,6 +19,8 @@ public class Coil {
     public Double c0051, c0052, c0053, c0054, c0055, c0056;
 
     public String timeStamp;
+
+    public int[] coilsIDsFromFile;
 
 
     public Coil(){};

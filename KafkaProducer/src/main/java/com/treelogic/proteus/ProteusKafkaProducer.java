@@ -13,6 +13,7 @@ public class ProteusKafkaProducer {
 
     private static Properties kafkaProperties = new Properties();
     private static KafkaProducer producer;
+    private static String KAFKA_TOPIC;
 
     static {
         kafkaProperties.put("bootstrap.servers", "localhost:9092");
@@ -24,12 +25,17 @@ public class ProteusKafkaProducer {
         kafkaProperties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         kafkaProperties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         producer = new KafkaProducer(kafkaProperties);
+        KAFKA_TOPIC = (String) ProteusData.get("kafka.topicName");
+
     }
 
     private ProteusKafkaProducer() {
     }
 
     public static void produce(Row row) {
-        producer.send(new ProducerRecord("proteus-1d", "test", row.toJson()));
+
+
+        producer.send(new ProducerRecord(KAFKA_TOPIC, row.toJson()))
+        ;
     }
 }

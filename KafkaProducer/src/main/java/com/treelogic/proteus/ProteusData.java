@@ -10,22 +10,41 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by ignacio.g.fernandez on 3/05/17.
  */
 public class ProteusData {
 
-    public static final int TIME_BETWEEN_COILS = 3000;
+    public static  int TIME_BETWEEN_COILS;
 
-    public static final int COIL_TIME = 120000;
+    public static  int COIL_TIME;
 
     private static Map<String, String> coil_xMax = new HashMap<>();
 
     private static final Logger logger = LoggerFactory.getLogger(ProteusData.class);
 
+    private static Properties properties;
 
-    public static Double getXmax(int coil){
+
+    static {
+        properties = new Properties();
+        try {
+            properties.load(ProteusData.class.getClassLoader().getResource("config.properties").openStream());
+            TIME_BETWEEN_COILS = Integer.parseInt((String)ProteusData.get("model.timeBetweenCoils"));
+            COIL_TIME = Integer.parseInt((String)ProteusData.get("model.coilTime"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Object get(String property) {
+        System.out.println(properties.get("com.treelogic.proteus." + property));
+        return properties.get("com.treelogic.proteus." + property);
+    }
+
+    public static Double getXmax(int coil) {
         String coilString = String.valueOf(coil);
         Double maxX = Double.parseDouble(coil_xMax.get(coilString));
         logger.info("Trying to obtain maxX for coil : " + coilString + " = " + maxX);

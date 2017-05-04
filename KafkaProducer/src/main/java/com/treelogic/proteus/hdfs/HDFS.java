@@ -1,6 +1,7 @@
 package com.treelogic.proteus.hdfs;
 
 
+import com.treelogic.proteus.ProteusData;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -16,13 +17,14 @@ import java.util.stream.Stream;
  * Created by ignacio.g.fernandez on 2/05/17.
  */
 public class HDFS {
-    public static String HDFS_URI = "hdfs://192.168.4.245:8020";
+    public static String HDFS_URI;
     private static Configuration conf = new Configuration();
     private static FileSystem fs;
 
     static {
         conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
         conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
+        HDFS_URI = (String) ProteusData.get("hdfs.baseUrl");
         try {
             fs = FileSystem.get(URI.create(HDFS.HDFS_URI), conf);
         } catch (IOException e) {

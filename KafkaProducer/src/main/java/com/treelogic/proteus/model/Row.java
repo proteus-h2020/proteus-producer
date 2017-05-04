@@ -15,13 +15,15 @@ public abstract class Row {
     protected double x;
     protected String varName;
     protected double value;
+    protected String type;
 
-    public Row(){
+    public Row() {
         this.timestamp = new Date();
+        this.type = this.getClass().getSimpleName();
     }
 
 
-    public String toJson(){
+    public String toJson() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(this);
@@ -70,6 +72,14 @@ public abstract class Row {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

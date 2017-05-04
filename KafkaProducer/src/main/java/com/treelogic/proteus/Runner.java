@@ -22,10 +22,10 @@ public class Runner {
 
         ExecutorService service = Executors.newFixedThreadPool(1);
 
-        String proteusHDFSFile = "/proteus/dimensional/PROTEUS-1D.csv";
+        String proteusHDFSFile = (String) ProteusData.get("hdfs.filePath");
 
         service.submit(new StreamingTask<String>(proteusHDFSFile));
-        service.shutdown(); //Don't allow more submits
-        service.awaitTermination(1 , TimeUnit.SECONDS);
+        //service.shutdown(); //Don't allow more submits
+        //service.awaitTermination(1 , TimeUnit.SECONDS);
     }
 }

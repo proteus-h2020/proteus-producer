@@ -14,7 +14,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.treelogic.proteus.formatting.JsonParser;
 import com.treelogic.proteus.formatting.Parser;
-import com.treelogic.proteus.kafka.KafkaMessageEvent;
+import com.treelogic.proteus.KafkaMessageEvent;
 
 
 @Component

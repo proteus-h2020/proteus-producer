@@ -18,12 +18,20 @@
       <configuration>
         <archive>
           <manifest>
-            <mainClass>com.treelogic.proteus.kafka.producer.Proteus</mainClass>
+            <mainClass>com.treelogic.proteus.Runner</mainClass>
           </manifest>
         </archive>
         <descriptorRefs>
           <descriptorRef>jar-with-dependencies</descriptorRef>
         </descriptorRefs>
+      </configuration>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <configuration>
+        <source>1.8</source>
+        <target>1.8</target>
       </configuration>
     </plugin>
   </plugins>

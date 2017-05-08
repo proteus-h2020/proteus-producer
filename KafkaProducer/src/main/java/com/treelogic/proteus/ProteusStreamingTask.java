@@ -66,12 +66,9 @@ public class ProteusStreamingTask<T> extends SuspendableThread implements Callab
      */
     private boolean filterFlatness(Row row){
         String varname = row.getVarName();
-        logger.info("var: " +varname);
-        if(ProteusData.FLATNESS_VARNAMES.contains(varname)){
-            logger.info("INserting in flatness: " + row);
-            this.model.getCurrentFlatnessRows().add(row); // Store flatness row
 
-            logger.info("Size of list " + this.model.getCurrentFlatnessRows().size());
+        if(ProteusData.FLATNESS_VARNAMES.contains(varname)){
+            this.model.getCurrentFlatnessRows().add(row); // Store flatness row
             return false;
         }
         return true;

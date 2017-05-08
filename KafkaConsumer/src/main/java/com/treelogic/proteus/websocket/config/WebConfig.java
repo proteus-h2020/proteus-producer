@@ -14,7 +14,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import com.treelogic.proteus.kafka.EventSource;
+import com.treelogic.proteus.EventSource;
 import com.treelogic.proteus.websocket.echo.DefaultEchoService;
 import com.treelogic.proteus.websocket.echo.EchoWebSocketHandler;
 

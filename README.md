@@ -1,5 +1,7 @@
 # PROTEUS Kafka Producer & Consumer
 
+[![Build Status](https://travis-ci.org/proteus-h2020/KafkaConsumerProducer.svg?branch=master)](https://travis-ci.org/proteus-h2020/KafkaConsumerProducer)
+
 This project contains all the stuff needed to read and write data to Kafka.
 
 [KafkaProducer](https://github.com/proteus-h2020/KafkaConsumerProducer/blob/master/KafkaProducer/README.md)

@@ -17,5 +17,20 @@ public class Row2D extends Row {
     }
 
 
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+
+	@Override
+	public String toString() {
+		return super.toString() + " ----- Row2D [y=" + y + "]";
+	}
+    
+    
 }
 

@@ -50,6 +50,6 @@ public class HDFS {
         Path path = new Path(HDFS_URI + pathToFile);
         FSDataInputStream inputStream = fs.open(path);
         BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
-        return buffer.lines();
+        return buffer.lines().skip(1);
     }
 }

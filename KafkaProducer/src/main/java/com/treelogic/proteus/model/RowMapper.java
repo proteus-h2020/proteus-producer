@@ -1,12 +1,7 @@
-package com.treelogic.proteus;
+package com.treelogic.proteus.model;
 
-import com.treelogic.proteus.model.Row;
-import com.treelogic.proteus.model.Row1D;
-import com.treelogic.proteus.model.Row2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
 
 /**
  * Created by ignacio.g.fernandez on 2/05/17.
@@ -18,17 +13,21 @@ public class RowMapper {
 
     public static Row map(String rowText) {
         String[] columns = rowText.split(",");
-
         columns[0] = fixCoilName(columns[0]); //BUG - Some coilId are " ". Replace it by -1
+        Row row = null;
         switch (columns.length) {
             case 5:
-                return map2d(columns);
+                row = map2d(columns);
+                break;
             case 4:
-                return map1d(columns);
+                row = map1d(columns);
+                break;
             default:
                 logger.warn("Unkown number of columns: " + columns.length);
                 return null;
         }
+        logger.debug("Current row: " + row);
+        return row;
     }
 
     private static String fixCoilName(String coilName) {

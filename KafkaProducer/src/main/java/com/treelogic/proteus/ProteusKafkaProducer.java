@@ -33,9 +33,6 @@ public class ProteusKafkaProducer {
     }
 
     public static void produce(Row row) {
-
-
-        producer.send(new ProducerRecord(KAFKA_TOPIC, row.toJson()))
-        ;
+        producer.send(new ProducerRecord(KAFKA_TOPIC, row.toJson()));
     }
 }

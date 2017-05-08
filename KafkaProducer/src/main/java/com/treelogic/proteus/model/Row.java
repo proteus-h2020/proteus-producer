@@ -111,14 +111,12 @@ public abstract class Row {
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "Row{" +
-                "timestamp=" + timestamp +
-                ", coilId=" + coilId +
-                ", x=" + x +
-                ", varName='" + varName + '\'' +
-                ", value=" + value +
-                '}';
-    }
+
+	@Override
+	public String toString() {
+		return "Row [timestamp=" + timestamp + ", coilId=" + coilId + ", x=" + x + ", varName=" + varName + ", value="
+				+ value + ", type=" + type + "]";
+	}
+
+
 }

@@ -40,14 +40,12 @@ public class ProteusData {
     }
 
     public static Object get(String property) {
-        System.out.println(properties.get("com.treelogic.proteus." + property));
         return properties.get("com.treelogic.proteus." + property);
     }
 
     public static Double getXmax(int coil) {
         String coilString = String.valueOf(coil);
         Double maxX = Double.parseDouble(coil_xMax.get(coilString));
-        logger.info("Trying to obtain maxX for coil : " + coilString + " = " + maxX);
         return maxX;
     }
 

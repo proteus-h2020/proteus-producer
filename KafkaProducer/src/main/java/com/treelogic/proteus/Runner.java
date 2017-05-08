@@ -16,7 +16,7 @@ public class Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(Runner.class);
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws Exception {
         ProteusData.loadData();
         logger.info("Initial data loaded. Starting program.");
 
@@ -24,7 +24,8 @@ public class Runner {
 
         String proteusHDFSFile = (String) ProteusData.get("hdfs.filePath");
 
-        service.submit(new StreamingTask<String>(proteusHDFSFile));
+        new ProteusStreamingTask<String>(proteusHDFSFile).call();
+       // service.submit();
         //service.shutdown(); //Don't allow more submits
         //service.awaitTermination(1 , TimeUnit.SECONDS);
     }

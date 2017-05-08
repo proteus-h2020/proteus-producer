@@ -16,7 +16,7 @@ public class ProteusKafkaProducer {
     private static String KAFKA_TOPIC;
 
     static {
-        kafkaProperties.put("bootstrap.servers", "localhost:9092");
+        kafkaProperties.put("bootstrap.servers", ProteusData.get("kafka.bootstrapServers"));
         kafkaProperties.put("acks", "all");
         kafkaProperties.put("retries", 0);
         kafkaProperties.put("batch.size", 16384);

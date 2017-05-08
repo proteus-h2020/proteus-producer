@@ -53,13 +53,13 @@
         </encoder>
     </appender>
 
-    <logger name="com.treelogic.proteus" level="debug"
+    <logger name="com.treelogic.proteus" level="info"
             additivity="false">
         <appender-ref ref="FILE-AUDIT"/>
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="org.apache.kafka" level="debug"
+    <logger name="org.apache.kafka" level="info"
             additivity="false">
         <appender-ref ref="FILE-AUDIT-KAFKA"/>
         <appender-ref ref="STDOUT"/>

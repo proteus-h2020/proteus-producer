@@ -3,7 +3,10 @@ package com.treelogic.proteus;
 import com.treelogic.proteus.model.Row;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -14,6 +17,8 @@ public class ProteusKafkaProducer {
     private static Properties kafkaProperties = new Properties();
     private static KafkaProducer producer;
     private static String KAFKA_TOPIC;
+    private static String KAKFA_FLATNESS_TOPIC;
+    private static final Logger logger = LoggerFactory.getLogger(ProteusKafkaProducer.class);
 
     static {
         kafkaProperties.put("bootstrap.servers", ProteusData.get("kafka.bootstrapServers"));
@@ -26,6 +31,8 @@ public class ProteusKafkaProducer {
         kafkaProperties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         producer = new KafkaProducer(kafkaProperties);
         KAFKA_TOPIC = (String) ProteusData.get("kafka.topicName");
+        KAKFA_FLATNESS_TOPIC = (String) ProteusData.get("kafka.flatnessTopicName");
+
 
     }
 
@@ -34,5 +41,12 @@ public class ProteusKafkaProducer {
 
     public static void produce(Row row) {
         producer.send(new ProducerRecord(KAFKA_TOPIC, row.toJson()));
+    }
+
+    public static void produceFlatness(List<Row> rows){
+        for(Row row : rows) {
+            logger.info("Producing : " + row);
+            producer.send(new ProducerRecord(KAKFA_FLATNESS_TOPIC, row.toJson()));
+        }
     }
 }

@@ -52,12 +52,36 @@ public class ProteusStreamingTask<T> extends SuspendableThread implements Callab
         stream
                 .map(RowMapper::map) // Convert string into a Row
                 .filter(this::discardWrongCoilRows) //Discard wrong values
+                .filter(this::filterFlatness)
                 .peek(this::processCoilRow)
                 .forEachOrdered(this::produceMessage);
         return null;
     }
 
+    /**
+     * Excludes flatness variables from the data stream. This method stores such flatness vars in an internal list.
+     * When a coil finalises, these flatness values are emitted into another kafka topic
+     * @param row A given coil row
+     * @return
+     */
+    private boolean filterFlatness(Row row){
+        String varname = row.getVarName();
+        logger.info("var: " +varname);
+        if(ProteusData.FLATNESS_VARNAMES.contains(varname)){
+            logger.info("INserting in flatness: " + row);
+            this.model.getCurrentFlatnessRows().add(row); // Store flatness row
 
+            logger.info("Size of list " + this.model.getCurrentFlatnessRows().size());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Processes the given coil row, by calculating its delay time according to its X position
+     * @param row A given coil row
+     * @return
+     */
     private Row processCoilRow(Row row) {
         Row lastCoil = this.model.getLastCoilRow();
         logger.debug("Last coil id: " + (lastCoil!= null ? lastCoil.getCoilId() : "null") + ". Current coil: " + row.getCoilId());
@@ -72,13 +96,16 @@ public class ProteusStreamingTask<T> extends SuspendableThread implements Callab
         } else {
             long timeTaken =  (new Date().getTime() - this.model.getLastCoilStart().getTime());
             logger.debug("Changing COIL FROM " + lastCoil.getCoilId() + " to " + row.getCoilId());
-            logger.info("Last: " +  this.model.getLastCoilStart());
-            logger.info("Now: " + new Date());
+            logger.debug("Last: " +  this.model.getLastCoilStart());
+            logger.debug("Now: " + new Date());
             delay = ProteusData.TIME_BETWEEN_COILS;
 
             Calendar date = Calendar.getInstance();
             date.setTimeInMillis(new Date().getTime() + (long)delay);
             this.model.setLastCoilStart(date.getTime());
+
+            ProteusKafkaProducer.produceFlatness(this.model.getCurrentFlatnessRows());
+            this.model.getCurrentFlatnessRows().clear();
             //todo: update app status to AWAITING
         }
 

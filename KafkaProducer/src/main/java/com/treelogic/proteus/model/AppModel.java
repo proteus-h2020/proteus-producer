@@ -1,6 +1,8 @@
 package com.treelogic.proteus.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ignacio.g.fernandez on 2/05/17.
@@ -11,6 +13,9 @@ public class AppModel {
     private Row lastCoilRow;
     private Date lastCoilStart;
     private ProductionStatus status;
+
+    private List<Row> currentFlatnessRows;
+
     private double delay;
 
     public AppModel() {
@@ -18,6 +23,7 @@ public class AppModel {
         this.status = ProductionStatus.AWAITING;
         this.delay = 0.0D;
         this.lastCoilRow = null;
+        this.currentFlatnessRows = new ArrayList<Row>();
     }
 
 
@@ -60,6 +66,14 @@ public class AppModel {
 
     public void setLastCoilStart(Date lastCoilStart) {
         this.lastCoilStart = lastCoilStart;
+    }
+
+    public List<Row> getCurrentFlatnessRows() {
+        return currentFlatnessRows;
+    }
+
+    public void setCurrentFlatnessRows(List<Row> currentFlatnessRows) {
+        this.currentFlatnessRows = currentFlatnessRows;
     }
 
     public enum ProductionStatus {

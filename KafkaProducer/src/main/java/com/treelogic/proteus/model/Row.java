@@ -31,7 +31,6 @@ public abstract class Row {
             e.printStackTrace();
         }
         return null;
-
     }
 
     public Date getTimestamp() {

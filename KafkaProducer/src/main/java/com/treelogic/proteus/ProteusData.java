@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by ignacio.g.fernandez on 3/05/17.
@@ -26,6 +24,8 @@ public class ProteusData {
     private static final Logger logger = LoggerFactory.getLogger(ProteusData.class);
 
     private static Properties properties;
+
+    public static List<String> FLATNESS_VARNAMES = Arrays.asList("C0042", "C0028", "C0011");
 
 
     static {

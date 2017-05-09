@@ -1,5 +1,6 @@
 package com.treelogic.proteus;
 
+import com.treelogic.proteus.model.HSMRecord;
 import com.treelogic.proteus.model.Row;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -18,6 +19,7 @@ public class ProteusKafkaProducer {
     private static KafkaProducer producer;
     private static String KAFKA_TOPIC;
     private static String KAKFA_FLATNESS_TOPIC;
+    private static String KAKFA_HSM_TOPIC;
     private static final Logger logger = LoggerFactory.getLogger(ProteusKafkaProducer.class);
 
     static {
@@ -27,13 +29,12 @@ public class ProteusKafkaProducer {
         kafkaProperties.put("batch.size", 16384);
         kafkaProperties.put("linger.ms", 1);
         kafkaProperties.put("buffer.memory", 33554432);
-        kafkaProperties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        kafkaProperties.put("key.serializer", "org.apache.kafka.common.serialization.IntegerSerializer");
         kafkaProperties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         producer = new KafkaProducer(kafkaProperties);
         KAFKA_TOPIC = (String) ProteusData.get("kafka.topicName");
         KAKFA_FLATNESS_TOPIC = (String) ProteusData.get("kafka.flatnessTopicName");
-
-
+        KAKFA_HSM_TOPIC = (String) ProteusData.get("kafka.hsmTopicName");
     }
 
     private ProteusKafkaProducer() {
@@ -43,10 +44,15 @@ public class ProteusKafkaProducer {
         producer.send(new ProducerRecord(KAFKA_TOPIC, row.toJson()));
     }
 
-    public static void produceFlatness(List<Row> rows){
-        for(Row row : rows) {
+    public static void produceFlatness(List<Row> rows) {
+        for (Row row : rows) {
             logger.info("Producing : " + row);
-            producer.send(new ProducerRecord(KAKFA_FLATNESS_TOPIC, row.getCoilId(),row.toJson()));
+            producer.send(new ProducerRecord(KAKFA_FLATNESS_TOPIC, row.getCoilId(), row.toJson()));
         }
+    }
+
+    public static void produceHSMRecord(HSMRecord record) {
+        logger.info("Producing hsm : " + record);
+        producer.send(new ProducerRecord(KAKFA_HSM_TOPIC, record.getCoil(), record.toJson()));
     }
 }

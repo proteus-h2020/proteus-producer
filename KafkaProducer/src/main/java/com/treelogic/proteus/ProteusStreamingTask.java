@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * Created by ignacio.g.fernandez on 3/05/17.
  */
-public class ProteusStreamingTask<T> extends SuspendableThread implements Callable<T> {
+public class ProteusStreamingTask<T> implements Callable<T> {
     /**
      * Path to the PROTEUS data
      */
@@ -80,6 +80,8 @@ public class ProteusStreamingTask<T> extends SuspendableThread implements Callab
      * @return
      */
     private Row processCoilRow(Row row) {
+        this.model.setStatus(AppModel.ProductionStatus.PRODUCING);
+
         Row lastCoil = this.model.getLastCoilRow();
         logger.debug("Last coil id: " + (lastCoil!= null ? lastCoil.getCoilId() : "null") + ". Current coil: " + row.getCoilId());
 
@@ -91,7 +93,7 @@ public class ProteusStreamingTask<T> extends SuspendableThread implements Callab
         } else if (row.getCoilId() == lastCoil.getCoilId()) {
             delay = this.calculateDelayBetweenCurrentAndLastRow(row);
         } else {
-            long timeTaken =  (new Date().getTime() - this.model.getLastCoilStart().getTime());
+            long timeTaken = (new Date().getTime() - this.model.getLastCoilStart().getTime());
             logger.debug("Changing COIL FROM " + lastCoil.getCoilId() + " to " + row.getCoilId());
             logger.debug("Last: " +  this.model.getLastCoilStart());
             logger.debug("Now: " + new Date());
@@ -103,7 +105,7 @@ public class ProteusStreamingTask<T> extends SuspendableThread implements Callab
 
             ProteusKafkaProducer.produceFlatness(this.model.getCurrentFlatnessRows());
             this.model.getCurrentFlatnessRows().clear();
-            //todo: update app status to AWAITING
+            this.model.setStatus(AppModel.ProductionStatus.AWAITING);
         }
 
         this.applyDelay(delay);

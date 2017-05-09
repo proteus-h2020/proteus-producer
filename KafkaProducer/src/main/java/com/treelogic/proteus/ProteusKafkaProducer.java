@@ -46,7 +46,7 @@ public class ProteusKafkaProducer {
     public static void produceFlatness(List<Row> rows){
         for(Row row : rows) {
             logger.info("Producing : " + row);
-            producer.send(new ProducerRecord(KAKFA_FLATNESS_TOPIC, row.toJson()));
+            producer.send(new ProducerRecord(KAKFA_FLATNESS_TOPIC, row.getCoilId(),row.toJson()));
         }
     }
 }

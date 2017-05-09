@@ -17,20 +17,20 @@ import java.util.stream.Stream;
 public class Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(Runner.class);
+    public static ExecutorService service = Executors.newFixedThreadPool(3); //Max parallelism = stream, hsm and flatness at once.
 
     public static void main(String[] args) throws Exception {
+        ExecutorService service = Runner.service;
+        String proteusHDFSFile = (String) ProteusData.get("hdfs.streamingPath");
+
         ProteusData.loadData();
         logger.info("Initial data loaded. Starting program.");
 
-        ExecutorService service = Executors.newFixedThreadPool(1);
+        service.submit(new ProteusStreamingTask<>(proteusHDFSFile));
+        logger.info("Streaming service task has been submitted");
 
-        String proteusHDFSFile = (String) ProteusData.get("hdfs.streamingPath");
 
-        //new ProteusStreamingTask<String>(proteusHDFSFile).call();
-
-        new ProteusHSMTask<String>((String) ProteusData.get("hdfs.hsmPath")).call();
-
-       // service.submit();
+        // service.submit();
         //service.shutdown(); //Don't allow more submits
         //service.awaitTermination(1 , TimeUnit.SECONDS);
     }

@@ -4,18 +4,20 @@ import com.treelogic.proteus.hdfs.HDFS;
 import com.treelogic.proteus.model.AppModel;
 import com.treelogic.proteus.model.Row;
 import com.treelogic.proteus.model.RowMapper;
+import com.treelogic.proteus.utils.ListsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.Callable;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Stream;
 
 /**
  * Created by ignacio.g.fernandez on 3/05/17.
  */
-public class ProteusStreamingTask<T> implements Callable<T> {
+public class ProteusStreamingTask<T> extends ProteusTask {
     /**
      * Path to the PROTEUS data
      */
@@ -26,6 +28,7 @@ public class ProteusStreamingTask<T> implements Callable<T> {
      */
     private static final Logger logger = LoggerFactory.getLogger(ProteusStreamingTask.class);
 
+    private static final ExecutorService service = Runner.service;
 
     private AppModel model;
 
@@ -35,6 +38,7 @@ public class ProteusStreamingTask<T> implements Callable<T> {
      * @param filePath HDF path
      */
     public ProteusStreamingTask(String filePath) {
+        super();
         this.filePath = filePath;
         this.model = new AppModel();
     }
@@ -61,13 +65,14 @@ public class ProteusStreamingTask<T> implements Callable<T> {
     /**
      * Excludes flatness variables from the data stream. This method stores such flatness vars in an internal list.
      * When a coil finalises, these flatness values are emitted into another kafka topic
+     *
      * @param row A given coil row
      * @return
      */
-    private boolean filterFlatness(Row row){
+    private boolean filterFlatness(Row row) {
         String varname = row.getVarName();
 
-        if(ProteusData.FLATNESS_VARNAMES.contains(varname)){
+        if (ProteusData.FLATNESS_VARNAMES.contains(varname)) {
             this.model.getCurrentFlatnessRows().add(row); // Store flatness row
             return false;
         }
@@ -76,6 +81,7 @@ public class ProteusStreamingTask<T> implements Callable<T> {
 
     /**
      * Processes the given coil row, by calculating its delay time according to its X position
+     *
      * @param row A given coil row
      * @return
      */
@@ -83,8 +89,6 @@ public class ProteusStreamingTask<T> implements Callable<T> {
         this.model.setStatus(AppModel.ProductionStatus.PRODUCING);
 
         Row lastCoil = this.model.getLastCoilRow();
-        logger.debug("Last coil id: " + (lastCoil!= null ? lastCoil.getCoilId() : "null") + ". Current coil: " + row.getCoilId());
-
         double delay = 0.0D;
 
         if (lastCoil == null) {
@@ -94,16 +98,31 @@ public class ProteusStreamingTask<T> implements Callable<T> {
             delay = this.calculateDelayBetweenCurrentAndLastRow(row);
         } else {
             long timeTaken = (new Date().getTime() - this.model.getLastCoilStart().getTime());
-            logger.debug("Changing COIL FROM " + lastCoil.getCoilId() + " to " + row.getCoilId());
-            logger.debug("Last: " +  this.model.getLastCoilStart());
-            logger.debug("Now: " + new Date());
+            logger.info("COIL " + lastCoil.getCoilId() + " has finished. New coil: " + row.getCoilId());
+            logger.info("----------------------------------------------------------");
+            logger.info("Previous coil started at: " + this.model.getLastCoilStart());
+            logger.info("Now: " + new Date());
+            logger.info("----------------------------------------------------------");
+
             delay = ProteusData.TIME_BETWEEN_COILS;
 
             Calendar date = Calendar.getInstance();
-            date.setTimeInMillis(new Date().getTime() + (long)delay);
+            date.setTimeInMillis(new Date().getTime() + (long) delay);
             this.model.setLastCoilStart(date.getTime());
 
-            ProteusKafkaProducer.produceFlatness(this.model.getCurrentFlatnessRows());
+            logger.info("Current flatness rows: " + this.model.getCurrentFlatnessRows().size());
+
+            List<Row> flatnessCopy = ListsUtils.copy(this.model.getCurrentFlatnessRows());
+
+            //Produce Flatness variables
+            if(flatnessCopy.size() > 0) {
+                service.submit(new ProteusFlatnessTask<>(flatnessCopy));
+            }
+
+            //Produce HSM Variables
+            String hsmFilePath = (String) ProteusData.get("hdfs.hsmPath");
+            service.submit(new ProteusHSMTask<>(hsmFilePath, lastCoil.getCoilId()));
+
             this.model.getCurrentFlatnessRows().clear();
             this.model.setStatus(AppModel.ProductionStatus.AWAITING);
         }
@@ -116,20 +135,22 @@ public class ProteusStreamingTask<T> implements Callable<T> {
 
     /**
      * Calculates a delay time for the current row, based on the X value difference between current and previous row
+     *
      * @param currentRow current row
      * @return
      */
-    private double calculateDelayBetweenCurrentAndLastRow(Row currentRow){
+    private double calculateDelayBetweenCurrentAndLastRow(Row currentRow) {
         return (currentRow.getX() - this.model.getLastCoilRow().getX())
-               * (ProteusData.COIL_TIME / ProteusData.getXmax(currentRow.getCoilId()));
+                * (ProteusData.COIL_TIME / ProteusData.getXmax(currentRow.getCoilId()));
     }
 
-    private void updateCoilTimestampStart(){
+    private void updateCoilTimestampStart() {
         this.model.setLastCoilStart(new Date());
     }
 
     /**
      * Updates the program status after each iteration
+     *
      * @param row Current row
      */
     private void updateStatus(Row row) {
@@ -138,9 +159,10 @@ public class ProteusStreamingTask<T> implements Callable<T> {
 
     /**
      * Produces a new message containing the current row. It uses
+     *
      * @param row
      */
-    private void produceMessage(Row row){
+    private void produceMessage(Row row) {
         logger.debug("Producing row: " + row);
         ProteusKafkaProducer.produce(row);
     }
@@ -152,14 +174,19 @@ public class ProteusStreamingTask<T> implements Callable<T> {
     /**
      * Apply a specific delay
      *
-     * @param row
+     * @param delay delay time
      */
     public void applyDelay(double delay) {
-        logger.debug("Applying a delay of " + delay + "ms.");
+        if(delay > 7000D) { //avoid to much logs
+            logger.info("Sleeping " + this.getClass().getName()+" for " + delay + "ms");
+        }
         try {
             Thread.sleep((long) delay);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+        if(delay > 7000D) { //avoid to much logs
+            logger.info(this.getClass().getName() + " is alive again");
         }
     }
 

@@ -41,18 +41,17 @@ public class ProteusKafkaProducer {
     }
 
     public static void produce(Row row) {
+        logger.debug("Producing stream record : " + row);
         producer.send(new ProducerRecord(KAFKA_TOPIC, row.toJson()));
     }
 
-    public static void produceFlatness(List<Row> rows) {
-        for (Row row : rows) {
-            logger.info("Producing : " + row);
-            producer.send(new ProducerRecord(KAKFA_FLATNESS_TOPIC, row.getCoilId(), row.toJson()));
-        }
+    public static void produceFlatness(Row row) {
+        logger.debug("Producing flatness : " + row);
+        producer.send(new ProducerRecord(KAKFA_FLATNESS_TOPIC, row.getCoilId(), row.toJson()));
     }
 
     public static void produceHSMRecord(HSMRecord record) {
-        logger.info("Producing hsm : " + record);
+        logger.debug("Producing hsm : " + record);
         producer.send(new ProducerRecord(KAKFA_HSM_TOPIC, record.getCoil(), record.toJson()));
     }
 }

@@ -49,9 +49,10 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-5relative %-5level %logger{35} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %-5level %logger{35} - %msg%n</pattern>
         </encoder>
     </appender>
+
 
     <logger name="com.treelogic.proteus" level="info"
             additivity="false">

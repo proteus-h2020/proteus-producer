@@ -1,10 +1,7 @@
 package com.treelogic.proteus;
 
 import com.treelogic.proteus.hdfs.HDFS;
-import com.treelogic.proteus.model.AppModel;
-import com.treelogic.proteus.model.HSMRecordMapper;
-import com.treelogic.proteus.model.Row;
-import com.treelogic.proteus.model.RowMapper;
+import com.treelogic.proteus.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,14 +13,17 @@ import java.util.stream.Stream;
 /**
  * Created by ignacio.g.fernandez on 3/05/17.
  */
-public class ProteusHSMTask<T> implements Callable<T> {
+public class ProteusHSMTask<T> extends ProteusTask {
     /**
      * Path to the PROTEUS HSM data
      */
     private String hsmFilePath;
+    private int coilId;
 
-    public ProteusHSMTask(String hsmFilePath) {
+    public ProteusHSMTask(String hsmFilePath, int coilId) {
+        super();
         this.hsmFilePath = hsmFilePath;
+        this.coilId = coilId;
     }
 
     @Override
@@ -32,7 +32,12 @@ public class ProteusHSMTask<T> implements Callable<T> {
 
         stream
                 .map(HSMRecordMapper::map)
+                .filter(this::filterByCoil)
                 .forEach(ProteusKafkaProducer::produceHSMRecord);
         return null;
+    }
+
+    private boolean filterByCoil(HSMRecord record) {
+        return record.getCoil() == coilId;
     }
 }

@@ -1,4 +1,4 @@
-package com.treelogic.proteus.kafka;
+package com.treelogic.proteus;
 
 import org.springframework.context.ApplicationEvent;
 

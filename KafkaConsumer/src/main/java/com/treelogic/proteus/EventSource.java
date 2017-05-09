@@ -1,4 +1,4 @@
-package com.treelogic.proteus.kafka;
+package com.treelogic.proteus;
 
 import java.util.ArrayList;
 import java.util.Properties;

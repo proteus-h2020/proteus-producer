@@ -2,22 +2,18 @@ package com.treelogic.proteus;
 
 import com.treelogic.proteus.hdfs.HDFS;
 import com.treelogic.proteus.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
-/**
- * Created by ignacio.g.fernandez on 3/05/17.
- */
-public class ProteusHSMTask<T> extends ProteusTask {
+
+public class ProteusHSMTask extends ProteusTask {
     /**
      * Path to the PROTEUS HSM data
      */
     private String hsmFilePath;
+    
+    /**
+     * Coil ID for the current HSM
+     */
     private int coilId;
 
     public ProteusHSMTask(String hsmFilePath, int coilId) {
@@ -27,7 +23,7 @@ public class ProteusHSMTask<T> extends ProteusTask {
     }
 
     @Override
-    public T call() throws Exception {
+    public Void call() throws Exception {
         Stream<String> stream = HDFS.readFile(this.hsmFilePath);
 
         stream

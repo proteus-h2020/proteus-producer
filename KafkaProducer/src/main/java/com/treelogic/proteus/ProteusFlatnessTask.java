@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * Created by ignacio.g.fernandez on 9/05/17.
  */
-public class ProteusFlatnessTask<T> extends ProteusTask{
+public class ProteusFlatnessTask extends ProteusTask{
     /**
      * Path to the PROTEUS HSM data
      */
@@ -25,7 +25,7 @@ public class ProteusFlatnessTask<T> extends ProteusTask{
     }
 
     @Override
-    public T call() throws Exception {
+    public Void call() throws Exception {
         this.flatnessRows
                 .stream()
                 .forEach(ProteusKafkaProducer::produceFlatness);

@@ -1,13 +1,18 @@
 # proteus-producer
 [![Build Status](https://travis-ci.org/proteus-h2020/proteus-producer.svg?branch=fix-remove-unused-consumer-module)](https://travis-ci.org/proteus-h2020/proteus-producer)
 
-A Kafka Producer that is in charge of producing all the PROTEUS data in order to be consumed by different actors. This is intended to simulate the industry-based scenarion of AMII (coils generation). To achieve this, the producer uses three different topics:
+A Kafka Producer that is in charge of producing all the PROTEUS data in order to be consumed by different actors. This is intended to simulate the current industry-based scenario of AMII (sequential generation of multiple coils). To achieve this, the producer uses three different topics:
 
 * **proteus-realtime** manages all the time-series data with 1 dimension (position x) and 2 Dimension (position x and position y), produced and available in real time (streaming) during the coil production.
 * **proteus-hsm** manages all HSM data, produced as aggregated information at the end of the process and available only once the coil production has finalised.
 * **proteus-flatness**: manages the flatness data variables, produced as measures of the flatness of the resulting coil, and available only after a certain delay after the coil production has finalised.
 
 ## Getting started
+
+### Installing software dependencies
+(see requirements section)
+
+### Moving files to HDFS
 An important requirement before running the producer is to have the heterogeneous PROTEUS data (provided by e-mail to all the project partners) in an HDFS cluster (single-node deployments are also valid).
 
 Use the following command to move your data (**PROTEUS_HETEROGENEOUS_FILE.csv**) to your HDFS:
@@ -16,21 +21,37 @@ Use the following command to move your data (**PROTEUS_HETEROGENEOUS_FILE.csv**)
 hdfs dfs -put <path_to_PROTEUS_HETEROGENEOUS_FILE.csv> /proteus/heterogeneous/final.csv
 ```
 
-If you want to use a different path for the HDFS file location, you need to configure the variable `com.treelogic.proteus.hdfs.streamingPath` in the  **```src/main/resources/config.properties```** before running the program.
+If you want to use a different HDFS location, you need to configure the variable `com.treelogic.proteus.hdfs.streamingPath` in the  **```src/main/resources/config.properties```** before running the program.
 
-Since HSM data is also managed by this producer (when a coil production has finished, its corresponding HSM record is produced using the **proteus-hsm** topic), you need to move your HSM to your HDFS too:
+Since HSM data is also managed by this producer (when a coil has finished, its corresponding HSM record is produced using the **proteus-hsm** topic), you need to move your HSM to your HDFS too:
 
 ```
 hdfs dfs -put <path_to_HSM_subset.csv> /proteus/hsm/HSM_subset.csv
 ```
-If you want to use a different path for the HDFS file location, you need to configure the variable `com.treelogic.proteus.hdfs.hsmPath` in the  **```src/main/resources/config.properties```** before running the program.
+If you want to use a different HDFS location, you need to configure the variable `com.treelogic.proteus.hdfs.hsmPath` in the  **```src/main/resources/config.properties```** before running the program.
 
 THe HSM_subset.csv file was also provided by e-mail to all the PROTEUS partners. Actually, this file (2GB) is a subset of the original HSM data (40GB), containing only those coils present in the real-time dataset (PROTEUS_HETEROGENEOUS_FILE.csv). 
 
 **IMPORTANT**
 If you need to use the HSM data for traning and learning purposes, please, keep in mind that the HSM_subset.csv is just a subset of the original HSM.
 
+### Creating Kafka topics
+You need also to create the abovementioned kafka topics. You can use the following commands (by default, we create one partition per topic. This should be improved in the future):
 
+```
+/opt/kafka/bin/kafka-topics.sh --zookeeper <your_zookeeper_url>:2181 --create --topic proteus-realtime --partitions 1 --replication-factor 1
+
+```
+
+```
+/opt/kafka/bin/kafka-topics.sh --zookeeper <your_zookeeper_url>:2181 --create --topic proteus-hsm --partitions 1 --replication-factor 1
+
+```
+
+```
+/opt/kafka/bin/kafka-topics.sh --zookeeper <your_zookeeper_url>:2181 --create --topic proteus-flatness --partitions 1 --replication-factor 1
+
+```
 
 ## How to run it
 You can run the kafka producer in different ways. If you are using a terminal, please, run the following command.
@@ -40,7 +61,9 @@ mvn exec:java
 
 If you want to import and run the project into your prefered IDE (e.g. eclipse, intellij), you need to import the maven project and execute the `com.treelogic.proteus.Runner` class. 
 
+
 ## Configuration
+The following shows the default configuration of the producer, specified in the  **```src/main/resources/config.properties```** file:
 
 ```properties
 com.treelogic.proteus.hdfs.baseUrl=hdfs://192.168.4.245:8020
@@ -63,6 +86,7 @@ com.treelogic.proteus.model.hsm.splitter=;
 ## Software Requirements
 * **Java 8**
 * **Maven >= 3.0.0**
+* **Kafka 0.10.x**
 
 ## Logs and monitoring
 Inmediatly after running the program two logs files are created:

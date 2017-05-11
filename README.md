@@ -66,18 +66,18 @@ If you want to import and run the project into your prefered IDE (e.g. eclipse, 
 The following shows the default configuration of the producer, specified in the  **```src/main/resources/config.properties```** file:
 
 ```properties
-com.treelogic.proteus.hdfs.baseUrl=hdfs://192.168.4.245:8020
-com.treelogic.proteus.hdfs.streamingPath=/proteus/heterogeneous/final.csv
-com.treelogic.proteus.hdfs.hsmPath=/proteus/hsm/HSM_subset.csv
+com.treelogic.proteus.hdfs.baseUrl=hdfs://192.168.4.245:8020 # Base URL of your HDFS
+com.treelogic.proteus.hdfs.streamingPath=/proteus/heterogeneous/final.csv # Path to realtime data
+com.treelogic.proteus.hdfs.hsmPath=/proteus/hsm/HSM_subset.csv #Path to HSM data
 
-com.treelogic.proteus.kafka.bootstrapServers=clusterIDI.slave01.treelogic.local:6667,clusterIDI.slave02.treelogic.local:6667,clusterIDI.slave03.treelogic.local:6667
-com.treelogic.proteus.kafka.topicName=proteus-realtime
-com.treelogic.proteus.kafka.flatnessTopicName=proteus-flatness
-com.treelogic.proteus.kafka.hsmTopicName=proteus-hsm
+com.treelogic.proteus.kafka.bootstrapServers=clusterIDI.slave01.treelogic.local:6667,clusterIDI.slave02.treelogic.local:6667,clusterIDI.slave03.treelogic.local:6667 # Bootstrap servers
+com.treelogic.proteus.kafka.topicName=proteus-realtime # Topic name of real-time data
+com.treelogic.proteus.kafka.flatnessTopicName=proteus-flatness # Topic name of flatness data
+com.treelogic.proteus.kafka.hsmTopicName=proteus-hsm # Topic name of HSM data
 
-com.treelogic.proteus.model.timeBetweenCoils=10000
-com.treelogic.proteus.model.coilTime=120000
-com.treelogic.proteus.model.flatnessDelay=20000
+com.treelogic.proteus.model.timeBetweenCoils=10000 # The time (in ms) that the program takes between generation of different coils
+com.treelogic.proteus.model.coilTime=120000 #The time (in ms) that the producer takes to produce a single coil
+com.treelogic.proteus.model.flatnessDelay=20000 #When a coil finishes, the program schedules its corresponding flatness generation with a delay time here indicated
 
 com.treelogic.proteus.model.hsm.splitter=;
 ```

@@ -6,10 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
-/**
- * Created by ignacio.g.fernandez on 9/05/17.
- */
-public abstract class ProteusTask <T> implements Callable<T> {
+
+public abstract class ProteusTask implements Callable<Void> {
 
     private static final Logger logger = LoggerFactory.getLogger(ProteusTask.class);
 

@@ -5,19 +5,23 @@ import com.treelogic.proteus.model.AppModel;
 import com.treelogic.proteus.model.Row;
 import com.treelogic.proteus.model.RowMapper;
 import com.treelogic.proteus.utils.ListsUtils;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Stream;
 
 /**
  * Created by ignacio.g.fernandez on 3/05/17.
  */
-public class ProteusStreamingTask<T> extends ProteusTask {
+public class ProteusStreamingTask extends ProteusTask {
     /**
      * Path to the PROTEUS data
      */
@@ -50,7 +54,7 @@ public class ProteusStreamingTask<T> extends ProteusTask {
      * @throws Exception
      */
     @Override
-    public T call() throws Exception {
+    public Void call() throws Exception {
         Stream<String> stream = HDFS.readFile(this.filePath);
 
         stream
@@ -112,16 +116,8 @@ public class ProteusStreamingTask<T> extends ProteusTask {
 
             logger.info("Current flatness rows: " + this.model.getCurrentFlatnessRows().size());
 
-            List<Row> flatnessCopy = ListsUtils.copy(this.model.getCurrentFlatnessRows());
-
-            //Produce Flatness variables
-            if(flatnessCopy.size() > 0) {
-                service.submit(new ProteusFlatnessTask<>(flatnessCopy));
-            }
-
-            //Produce HSM Variables
-            String hsmFilePath = (String) ProteusData.get("hdfs.hsmPath");
-            service.submit(new ProteusHSMTask<>(hsmFilePath, lastCoil.getCoilId()));
+            this.handleFlatness();
+            this.handleHSM(lastCoil.getCoilId());
 
             this.model.getCurrentFlatnessRows().clear();
             this.model.setStatus(AppModel.ProductionStatus.AWAITING);
@@ -131,6 +127,30 @@ public class ProteusStreamingTask<T> extends ProteusTask {
         this.updateStatus(row);
 
         return row;
+    }
+    
+    
+    private void handleHSM(int coilId){
+        String hsmFilePath = (String) ProteusData.get("hdfs.hsmPath");
+        service.submit(new ProteusHSMTask(hsmFilePath, coilId));
+    }
+    
+    private void handleFlatness(){
+        List<Row> flatnessCopy = ListsUtils.copy(this.model.getCurrentFlatnessRows());
+
+        //Produce Flatness variables
+        if(flatnessCopy.size() > 0) {
+        	long flatnessDelay = Long.parseLong(ProteusData.get("model.flatnessDelay").toString());
+        	
+        	Timer timer = new Timer();
+        	TimerTask task = new TimerTask() {
+				@Override
+				public void run() {
+		            service.submit(new ProteusFlatnessTask(flatnessCopy));					
+				}
+			};
+			timer.schedule(task, flatnessDelay);
+        }
     }
 
     /**
@@ -178,7 +198,7 @@ public class ProteusStreamingTask<T> extends ProteusTask {
      */
     public void applyDelay(double delay) {
         if(delay > 7000D) { //avoid to much logs
-            logger.info("Sleeping " + this.getClass().getName()+" for " + delay + "ms");
+            logger.debug("Sleeping " + this.getClass().getName()+" for " + delay + "ms");
         }
         try {
             Thread.sleep((long) delay);
@@ -186,7 +206,7 @@ public class ProteusStreamingTask<T> extends ProteusTask {
             e.printStackTrace();
         }
         if(delay > 7000D) { //avoid to much logs
-            logger.info(this.getClass().getName() + " is alive again");
+            logger.debug(this.getClass().getName() + " is alive again");
         }
     }
 

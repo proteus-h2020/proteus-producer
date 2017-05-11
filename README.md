@@ -89,7 +89,7 @@ com.treelogic.proteus.model.hsm.splitter=;
 * **Kafka 0.10.x**
 
 ## Logs and monitoring
-Inmediatly after running the program two logs files are created:
+immediately after running the program two logs files are created:
 * **kafka.log**: this contains logging infomation about the kafka cluster that you previously configured. Kafka messages are written into this file
 
 * **proteus.log**: this contains information about the coil generation process.

@@ -96,5 +96,4 @@ immediately after running the program two logs files are created:
 
 
 By default these files are created in the main directory (the same as the pom.xml is), but you can customize this in the **src/main/resources/loback.xml**. Both kafka and proteus logs are also printed to STDOUT. 
-mvn clean compile assembly:single
 

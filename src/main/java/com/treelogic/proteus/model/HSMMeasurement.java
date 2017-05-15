@@ -3,34 +3,28 @@ package com.treelogic.proteus.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HSMMeasurement{
+public class HSMMeasurement extends Measurement{
 
-	private Date timestamp;
 	private int coil;
 	private Map<String, Object> variables = new HashMap<String, Object>();
 	private int varCounter;
 
 	public HSMMeasurement(int coilID) {
-		this.timestamp = new Date();
 		this.coil = coilID;
 		this.varCounter = 1;
 	}
 
+	public HSMMeasurement(int coilID, Map<String, Object> variables){
+		this.coil = coilID;
+		this.varCounter = variables.size();
+		this.variables = variables;
+	}
 	public void put(Object value) {
 		String key = String.format("V%d", varCounter++);
 		this.variables.put(key, value);
-	}
-
-	public Date getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
 	}
 
 	public int getCoil() {
@@ -49,12 +43,6 @@ public class HSMMeasurement{
 		this.variables = variables;
 	}
 
-	@Override
-	public String toString() {
-		return "HSMRecord{" + "timestamp=" + timestamp + ", coil=" + coil + ", variables=" + variables + ", varCounter="
-				+ varCounter + '}';
-	}
-
 	public String toJson() {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -64,4 +52,41 @@ public class HSMMeasurement{
 		}
 		return null;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + coil;
+		result = prime * result + varCounter;
+		result = prime * result + ((variables == null) ? 0 : variables.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HSMMeasurement other = (HSMMeasurement) obj;
+		if (coil != other.coil)
+			return false;
+		if (varCounter != other.varCounter)
+			return false;
+		if (variables == null) {
+			if (other.variables != null)
+				return false;
+		} else if (!variables.equals(other.variables))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "HSMMeasurement [coil=" + coil + ", variables=" + variables + ", varCounter=" + varCounter + "]";
+	}
+		
 }

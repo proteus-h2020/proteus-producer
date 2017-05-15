@@ -5,6 +5,9 @@ import com.esotericsoftware.kryo.io.ByteBufferInput;
 import com.esotericsoftware.kryo.io.ByteBufferOutput;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.treelogic.proteus.model.HSMMeasurement;
+import com.treelogic.proteus.model.Measurement;
+import com.treelogic.proteus.model.ProteusData;
 import com.treelogic.proteus.model.SensorMeasurement;
 import com.treelogic.proteus.model.SensorMeasurement1D;
 import com.treelogic.proteus.model.SensorMeasurement2D;
@@ -13,20 +16,33 @@ import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.io.Closeable;
+import java.util.HashMap;
 import java.util.Map;
 
-public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<SensorMeasurement>, Deserializer<SensorMeasurement> {
+public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<Measurement>, Deserializer<Measurement> {
+
+	/**
+	 * Thread-safe kryo instance that handles, serializes and deserializes
+	 * PROTEUS POJOS.
+	 */
 	private ThreadLocal<Kryo> kryos = new ThreadLocal<Kryo>() {
 		protected Kryo initialValue() {
 			Kryo kryo = new Kryo();
-			KryoInternalSerializer kryoInternal = new KryoInternalSerializer();
-			kryo.addDefaultSerializer(SensorMeasurement.class, kryoInternal);
-			kryo.addDefaultSerializer(SensorMeasurement1D.class, kryoInternal);
-			kryo.addDefaultSerializer(SensorMeasurement2D.class, kryoInternal);
+			SensorMeasurementInternalSerializer sensorInternal = new SensorMeasurementInternalSerializer();
+			HSMMeasurementInternalSerializer hsmInternal = new HSMMeasurementInternalSerializer();
+
+			kryo.addDefaultSerializer(HSMMeasurement.class, hsmInternal);
+
+			kryo.addDefaultSerializer(SensorMeasurement.class, sensorInternal);
+			kryo.addDefaultSerializer(SensorMeasurement1D.class, sensorInternal);
+			kryo.addDefaultSerializer(SensorMeasurement2D.class, sensorInternal);
 			return kryo;
 		};
 	};
 
+	/**
+	 * The MAGIC_NUMBER, with the value of the PROTEUS project identificator
+	 */
 	private static final int MAGIC_NUMBER = 0x00687691; // PROTEUS EU id
 
 	@Override
@@ -34,18 +50,28 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<S
 	}
 
 	@Override
-	public byte[] serialize(String s, SensorMeasurement row) {
-		ByteBufferOutput output = new ByteBufferOutput(50); // TODO Max size of
-															// the buffer.
-															// Optimise it.
-		kryos.get().writeObject(output, row);
+	public byte[] serialize(String topic, Measurement record) {
+		int byteBufferLength = 50;
+		if (record instanceof HSMMeasurement) {
+			byteBufferLength = 7600 * 2 * 100; // TODO: improve
+		}
+		ByteBufferOutput output = new ByteBufferOutput(byteBufferLength);
+		kryos.get().writeObject(output, record);
 		return output.toBytes();
 	}
 
 	@Override
-	public SensorMeasurement deserialize(String topic, byte[] bytes) {
+	public Measurement deserialize(String topic, byte[] bytes) {
 		try {
-			return kryos.get().readObject(new ByteBufferInput(bytes), SensorMeasurement.class);
+			if (topic.equals(ProteusData.get("kafka.topicName"))) {
+				return kryos.get().readObject(new ByteBufferInput(bytes), SensorMeasurement.class);
+			} else if (topic.equals(ProteusData.get("kafka.flatnessTopicName"))) {
+				return kryos.get().readObject(new ByteBufferInput(bytes), SensorMeasurement.class);
+			} else if (topic.equals(ProteusData.get("kafka.hsmTopicName"))) {
+				return kryos.get().readObject(new ByteBufferInput(bytes), HSMMeasurement.class);
+			} else {
+				throw new IllegalArgumentException("Illegal argument: " + topic);
+			}
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Error reading bytes", e);
 		}
@@ -56,10 +82,10 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<S
 
 	}
 
-	private static class KryoInternalSerializer extends com.esotericsoftware.kryo.Serializer<SensorMeasurement> {
+	private static class SensorMeasurementInternalSerializer
+			extends com.esotericsoftware.kryo.Serializer<SensorMeasurement> {
 		@Override
 		public void write(Kryo kryo, Output output, SensorMeasurement row) {
-
 			if (row instanceof SensorMeasurement1D) {
 				SensorMeasurement1D cast = (SensorMeasurement1D) row;
 				output.writeInt(MAGIC_NUMBER);
@@ -98,6 +124,23 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<S
 				return new SensorMeasurement1D(coilId, x, varId, value);
 			}
 
+		}
+	}
+
+	private static class HSMMeasurementInternalSerializer extends com.esotericsoftware.kryo.Serializer<HSMMeasurement> {
+		@Override
+		public void write(Kryo kryo, Output output, HSMMeasurement hsmRecord) {
+			output.writeInt(hsmRecord.getCoil());
+			kryo.writeObject(output, hsmRecord.getVariables());
+		}
+
+		@Override
+		public HSMMeasurement read(Kryo kryo, Input input, Class<HSMMeasurement> clazz) {
+			int coil = input.readInt();
+			Map<String, Object> variables = kryo.readObject(input, HashMap.class);
+			HSMMeasurement hsmRecord = new HSMMeasurement(coil);
+			hsmRecord.setVariables(variables);
+			return hsmRecord;
 		}
 	}
 }

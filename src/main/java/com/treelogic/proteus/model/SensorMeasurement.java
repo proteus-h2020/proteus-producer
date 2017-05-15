@@ -3,7 +3,7 @@ package com.treelogic.proteus.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class SensorMeasurement {
+public abstract class SensorMeasurement extends Measurement{
 
 	protected int coilId;
 	protected int varName;

@@ -3,9 +3,7 @@ package com.treelogic.proteus.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by ignacio.g.fernandez on 2/05/17.
- */
+
 public class RowMapper {
 
     private static final Logger logger = LoggerFactory.getLogger(RowMapper.class);
@@ -41,7 +39,7 @@ public class RowMapper {
         return new Row1D(
                 Integer.parseInt(columns[0]),
                 Double.parseDouble(columns[1]),
-                columns[2],
+                parseVarIdentifier(columns[2]),
                 Double.parseDouble(columns[3])
         );
     }
@@ -51,10 +49,13 @@ public class RowMapper {
                 Integer.parseInt(columns[0]),
                 Double.parseDouble(columns[1]),
                 Double.parseDouble(columns[2]),
-                columns[3],
+                parseVarIdentifier(columns[3]),
                 Double.parseDouble(columns[4])
         );
     }
 
+    private static int parseVarIdentifier(String varName){
+    	return Integer.parseInt(varName.split("C")[1]);
+    }
 
 }

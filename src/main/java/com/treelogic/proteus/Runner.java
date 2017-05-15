@@ -2,6 +2,10 @@ package com.treelogic.proteus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.treelogic.proteus.model.ProteusData;
+import com.treelogic.proteus.tasks.ProteusStreamingTask;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,6 +13,7 @@ import java.util.concurrent.Executors;
 public class Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(Runner.class);
+    
     public static ExecutorService service = Executors.newFixedThreadPool(15); //Max parallelism = stream, hsm and flatness at once.
 
     public static void main(String[] args) throws Exception {

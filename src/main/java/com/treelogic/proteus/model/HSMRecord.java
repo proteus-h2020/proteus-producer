@@ -7,70 +7,61 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by ignacio.g.fernandez on 9/05/17.
- */
 public class HSMRecord {
 
-    private Date timestamp;
-    private int coil;
-    private Map<String, Object> variables = new HashMap();
-    private int varCounter;
+	private Date timestamp;
+	private int coil;
+	private Map<String, Object> variables = new HashMap<String, Object>();
+	private int varCounter;
 
+	public HSMRecord(int coilID) {
+		this.timestamp = new Date();
+		this.coil = coilID;
+		this.varCounter = 1;
+	}
 
-    public HSMRecord(int coilID){
-        this.timestamp = new Date();
-        this.coil = coilID;
-        this.varCounter = 1;
-    }
+	public void put(Object value) {
+		String key = String.format("V%d", varCounter++);
+		this.variables.put(key, value);
+	}
 
+	public Date getTimestamp() {
+		return timestamp;
+	}
 
-    public void put(Object value){
-        String key = String.format("V%d", varCounter++);
-        this.variables.put(key, value);
-    }
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
+	public int getCoil() {
+		return coil;
+	}
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
+	public void setCoil(int coil) {
+		this.coil = coil;
+	}
 
-    public int getCoil() {
-        return coil;
-    }
+	public Map<String, Object> getVariables() {
+		return variables;
+	}
 
-    public void setCoil(int coil) {
-        this.coil = coil;
-    }
+	public void setVariables(Map<String, Object> variables) {
+		this.variables = variables;
+	}
 
-    public Map<String, Object> getVariables() {
-        return variables;
-    }
+	@Override
+	public String toString() {
+		return "HSMRecord{" + "timestamp=" + timestamp + ", coil=" + coil + ", variables=" + variables + ", varCounter="
+				+ varCounter + '}';
+	}
 
-    public void setVariables(Map<String, Object> variables) {
-        this.variables = variables;
-    }
-
-    @Override
-    public String toString() {
-        return "HSMRecord{" +
-                "timestamp=" + timestamp +
-                ", coil=" + coil +
-                ", variables=" + variables +
-                ", varCounter=" + varCounter +
-                '}';
-    }
-
-    public String toJson() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	public String toJson() {
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

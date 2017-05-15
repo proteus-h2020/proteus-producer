@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by ignacio.g.fernandez on 2/05/17.
- */
 public class AppModel {
 
     private Integer aliveCoil;

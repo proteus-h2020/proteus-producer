@@ -3,119 +3,113 @@ package com.treelogic.proteus.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.Date;
-
-/**
- * Created by ignacio.g.fernandez on 2/05/17.
- */
 public abstract class Row {
 
-    protected Date timestamp;
-    protected int coilId;
-    protected double x;
-    protected String varName;
-    protected double value;
-    protected String type;
+	protected final int MAGIC_NUMBER = 0x00687691;
+	protected int coilId;
+	protected int varName;
+	protected double value;
+	protected byte type;
+	protected double x;
 
-    public Row() {
-        this.timestamp = new Date();
-        this.type = this.getClass().getSimpleName();
-    }
+	public Row() {
+		this.type = this.getClass() == Row2D.class ? (byte) 0x01f : (byte) 0x00f;
+	}
 
+	public String toJson() {
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-    public String toJson() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	public int getMAGIC_NUMBER() {
+		return MAGIC_NUMBER;
+	}
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
+	public int getCoilId() {
+		return coilId;
+	}
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
+	public void setCoilId(int coilId) {
+		this.coilId = coilId;
+	}
 
-    public int getCoilId() {
-        return coilId;
-    }
+	public int getVarName() {
+		return varName;
+	}
 
-    public void setCoilId(int coilId) {
-        this.coilId = coilId;
-    }
+	public void setVarName(int varName) {
+		this.varName = varName;
+	}
 
-    public double getX() {
-        return x;
-    }
+	public double getValue() {
+		return value;
+	}
 
-    public void setX(double x) {
-        this.x = x;
-    }
+	public double getX() {
+		return x;
+	}
 
-    public String getVarName() {
-        return varName;
-    }
+	public void setX(double x) {
+		this.x = x;
+	}
 
-    public void setVarName(String varName) {
-        this.varName = varName;
-    }
+	public void setValue(double value) {
+		this.value = value;
+	}
 
-    public double getValue() {
-        return value;
-    }
+	public byte getType() {
+		return type;
+	}
 
-    public void setValue(double value) {
-        this.value = value;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + MAGIC_NUMBER;
+		result = prime * result + coilId;
+		result = prime * result + type;
+		long temp;
+		temp = Double.doubleToLongBits(value);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + varName;
+		temp = Double.doubleToLongBits(x);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Row row = (Row) o;
-
-        if (coilId != row.coilId) return false;
-        if (Double.compare(row.x, x) != 0) return false;
-        if (Double.compare(row.value, value) != 0) return false;
-        if (timestamp != null ? !timestamp.equals(row.timestamp) : row.timestamp != null) return false;
-        return varName != null ? varName.equals(row.varName) : row.varName == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = timestamp != null ? timestamp.hashCode() : 0;
-        result = 31 * result + coilId;
-        temp = Double.doubleToLongBits(x);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (varName != null ? varName.hashCode() : 0);
-        temp = Double.doubleToLongBits(value);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
-    }
-
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Row other = (Row) obj;
+		if (MAGIC_NUMBER != other.MAGIC_NUMBER)
+			return false;
+		if (coilId != other.coilId)
+			return false;
+		if (type != other.type)
+			return false;
+		if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value))
+			return false;
+		if (varName != other.varName)
+			return false;
+		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {
-		return "Row [timestamp=" + timestamp + ", coilId=" + coilId + ", x=" + x + ", varName=" + varName + ", value="
-				+ value + ", type=" + type + "]";
+		return "Row [MAGIC_NUMBER=" + MAGIC_NUMBER + ", coilId=" + coilId + ", varName=" + varName + ", value=" + value
+				+ ", type=" + type + ", x=" + x + "]";
 	}
-
 
 }

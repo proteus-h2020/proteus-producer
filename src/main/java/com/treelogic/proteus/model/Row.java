@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Row {
 
-	protected final int MAGIC_NUMBER = 0x00687691;
 	protected int coilId;
 	protected int varName;
 	protected double value;
@@ -24,10 +23,6 @@ public abstract class Row {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	public int getMAGIC_NUMBER() {
-		return MAGIC_NUMBER;
 	}
 
 	public int getCoilId() {
@@ -70,7 +65,6 @@ public abstract class Row {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + MAGIC_NUMBER;
 		result = prime * result + coilId;
 		result = prime * result + type;
 		long temp;
@@ -91,8 +85,6 @@ public abstract class Row {
 		if (getClass() != obj.getClass())
 			return false;
 		Row other = (Row) obj;
-		if (MAGIC_NUMBER != other.MAGIC_NUMBER)
-			return false;
 		if (coilId != other.coilId)
 			return false;
 		if (type != other.type)
@@ -108,8 +100,9 @@ public abstract class Row {
 
 	@Override
 	public String toString() {
-		return "Row [MAGIC_NUMBER=" + MAGIC_NUMBER + ", coilId=" + coilId + ", varName=" + varName + ", value=" + value
-				+ ", type=" + type + ", x=" + x + "]";
+		return "Row [coilId=" + coilId + ", varName=" + varName + ", value=" + value + ", type=" + type + ", x=" + x
+				+ "]";
 	}
+
 
 }

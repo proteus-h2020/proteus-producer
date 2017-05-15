@@ -1,11 +1,11 @@
 package com.treelogic.proteus.model;
 
-public class Row1D extends Row {
+public class SensorMeasurement1D extends SensorMeasurement {
 
 
-	public Row1D(){}
+	public SensorMeasurement1D(){}
 	
-    public Row1D(int coilId, double x, int variableIdentifier, double value){
+    public SensorMeasurement1D(int coilId, double x, int variableIdentifier, double value){
         super();
         this.coilId = coilId;
         this.x = x;

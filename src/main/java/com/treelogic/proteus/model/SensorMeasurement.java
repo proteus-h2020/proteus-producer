@@ -3,7 +3,7 @@ package com.treelogic.proteus.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class Row {
+public abstract class SensorMeasurement {
 
 	protected int coilId;
 	protected int varName;
@@ -11,8 +11,8 @@ public abstract class Row {
 	protected byte type;
 	protected double x;
 
-	public Row() {
-		this.type = this.getClass() == Row2D.class ? (byte) 0x0001f : (byte) 0x0000f;
+	public SensorMeasurement() {
+		this.type = this.getClass() == SensorMeasurement2D.class ? (byte) 0x0001f : (byte) 0x0000f;
 	}
 
 	public String toJson() {
@@ -84,7 +84,7 @@ public abstract class Row {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Row other = (Row) obj;
+		SensorMeasurement other = (SensorMeasurement) obj;
 		if (coilId != other.coilId)
 			return false;
 		if (type != other.type)

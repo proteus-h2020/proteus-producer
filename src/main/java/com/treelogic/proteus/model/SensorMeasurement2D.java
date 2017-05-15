@@ -1,14 +1,14 @@
 package com.treelogic.proteus.model;
 
-public class Row2D extends Row {
+public class SensorMeasurement2D extends SensorMeasurement {
 
 	private double y;
 
-	public Row2D() {
+	public SensorMeasurement2D() {
 
 	}
 
-	public Row2D(int coilId, double x, double y, int variableIdentifier, double value) {
+	public SensorMeasurement2D(int coilId, double x, double y, int variableIdentifier, double value) {
 		super();
 		this.coilId = coilId;
 		this.x = x;
@@ -60,10 +60,10 @@ public class Row2D extends Row {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (!(obj instanceof Row2D)) {
+		if (!(obj instanceof SensorMeasurement2D)) {
 			return false;
 		}
-		Row2D other = (Row2D) obj;
+		SensorMeasurement2D other = (SensorMeasurement2D) obj;
 		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)) {
 			return false;
 		}

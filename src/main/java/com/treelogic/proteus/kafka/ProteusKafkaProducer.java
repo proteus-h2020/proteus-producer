@@ -2,7 +2,7 @@ package com.treelogic.proteus.kafka;
 
 import com.treelogic.proteus.model.HSMRecord;
 import com.treelogic.proteus.model.ProteusData;
-import com.treelogic.proteus.model.Row;
+import com.treelogic.proteus.model.SensorMeasurement;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ import java.util.Properties;
 public class ProteusKafkaProducer {
 
 	private static Properties kafkaProperties = new Properties();
-	private static KafkaProducer<Integer, Row> producer;
+	private static KafkaProducer<Integer, SensorMeasurement> producer;
 	private static String KAFKA_TOPIC;
 	private static String KAKFA_FLATNESS_TOPIC;
 	private static String KAKFA_HSM_TOPIC;
@@ -27,7 +27,7 @@ public class ProteusKafkaProducer {
 		kafkaProperties.put("buffer.memory", 33554432);
 		kafkaProperties.put("key.serializer", "org.apache.kafka.common.serialization.IntegerSerializer");
 		kafkaProperties.put("value.serializer", "com.treelogic.proteus.serialization.ProteusSerializer");
-		producer = new KafkaProducer<Integer, Row>(kafkaProperties);
+		producer = new KafkaProducer<Integer, SensorMeasurement>(kafkaProperties);
 		KAFKA_TOPIC = (String) ProteusData.get("kafka.topicName");
 		KAKFA_FLATNESS_TOPIC = (String) ProteusData.get("kafka.flatnessTopicName");
 		KAKFA_HSM_TOPIC = (String) ProteusData.get("kafka.hsmTopicName");
@@ -36,14 +36,14 @@ public class ProteusKafkaProducer {
 	private ProteusKafkaProducer() {
 	}
 
-	public static void produce(Row row) {
+	public static void produce(SensorMeasurement row) {
 		logger.debug("Producing stream record : " + row);
-		producer.send(new ProducerRecord<Integer, Row>(KAFKA_TOPIC, row.getCoilId(), row));
+		producer.send(new ProducerRecord<Integer, SensorMeasurement>(KAFKA_TOPIC, row.getCoilId(), row));
 	}
 
-	public static void produceFlatness(Row row) {
+	public static void produceFlatness(SensorMeasurement row) {
 		logger.debug("Producing flatness : " + row);
-		producer.send(new ProducerRecord<Integer, Row>(KAKFA_FLATNESS_TOPIC, row.getCoilId(), row));
+		producer.send(new ProducerRecord<Integer, SensorMeasurement>(KAKFA_FLATNESS_TOPIC, row.getCoilId(), row));
 	}
 
 	public static void produceHSMRecord(HSMRecord record) {

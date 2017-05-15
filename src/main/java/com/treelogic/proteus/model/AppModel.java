@@ -7,11 +7,11 @@ import java.util.List;
 public class AppModel {
 
     private Integer aliveCoil;
-    private Row lastCoilRow;
+    private SensorMeasurement lastCoilRow;
     private Date lastCoilStart;
     private ProductionStatus status;
 
-    private List<Row> currentFlatnessRows;
+    private List<SensorMeasurement> currentFlatnessRows;
 
     private double delay;
 
@@ -20,7 +20,7 @@ public class AppModel {
         this.status = ProductionStatus.AWAITING;
         this.delay = 0.0D;
         this.lastCoilRow = null;
-        this.currentFlatnessRows = new ArrayList<Row>();
+        this.currentFlatnessRows = new ArrayList<SensorMeasurement>();
     }
 
 
@@ -49,11 +49,11 @@ public class AppModel {
         this.delay = delay;
     }
 
-    public Row getLastCoilRow() {
+    public SensorMeasurement getLastCoilRow() {
         return lastCoilRow;
     }
 
-    public void setLastCoilRow(Row lastCoilRow) {
+    public void setLastCoilRow(SensorMeasurement lastCoilRow) {
         this.lastCoilRow = lastCoilRow;
     }
 
@@ -65,11 +65,11 @@ public class AppModel {
         this.lastCoilStart = lastCoilStart;
     }
 
-    public List<Row> getCurrentFlatnessRows() {
+    public List<SensorMeasurement> getCurrentFlatnessRows() {
         return currentFlatnessRows;
     }
 
-    public void setCurrentFlatnessRows(List<Row> currentFlatnessRows) {
+    public void setCurrentFlatnessRows(List<SensorMeasurement> currentFlatnessRows) {
         this.currentFlatnessRows = currentFlatnessRows;
     }
 

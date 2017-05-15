@@ -5,9 +5,9 @@ import com.esotericsoftware.kryo.io.ByteBufferInput;
 import com.esotericsoftware.kryo.io.ByteBufferOutput;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.treelogic.proteus.model.Row;
-import com.treelogic.proteus.model.Row1D;
-import com.treelogic.proteus.model.Row2D;
+import com.treelogic.proteus.model.SensorMeasurement;
+import com.treelogic.proteus.model.SensorMeasurement1D;
+import com.treelogic.proteus.model.SensorMeasurement2D;
 
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
@@ -15,14 +15,14 @@ import org.apache.kafka.common.serialization.Serializer;
 import java.io.Closeable;
 import java.util.Map;
 
-public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<Row>, Deserializer<Row> {
+public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<SensorMeasurement>, Deserializer<SensorMeasurement> {
 	private ThreadLocal<Kryo> kryos = new ThreadLocal<Kryo>() {
 		protected Kryo initialValue() {
 			Kryo kryo = new Kryo();
 			KryoInternalSerializer kryoInternal = new KryoInternalSerializer();
-			kryo.addDefaultSerializer(Row.class, kryoInternal);
-			kryo.addDefaultSerializer(Row1D.class, kryoInternal);
-			kryo.addDefaultSerializer(Row2D.class, kryoInternal);
+			kryo.addDefaultSerializer(SensorMeasurement.class, kryoInternal);
+			kryo.addDefaultSerializer(SensorMeasurement1D.class, kryoInternal);
+			kryo.addDefaultSerializer(SensorMeasurement2D.class, kryoInternal);
 			return kryo;
 		};
 	};
@@ -34,7 +34,7 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 	}
 
 	@Override
-	public byte[] serialize(String s, Row row) {
+	public byte[] serialize(String s, SensorMeasurement row) {
 		ByteBufferOutput output = new ByteBufferOutput(50); // TODO Max size of
 															// the buffer.
 															// Optimise it.
@@ -43,9 +43,9 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 	}
 
 	@Override
-	public Row deserialize(String topic, byte[] bytes) {
+	public SensorMeasurement deserialize(String topic, byte[] bytes) {
 		try {
-			return kryos.get().readObject(new ByteBufferInput(bytes), Row.class);
+			return kryos.get().readObject(new ByteBufferInput(bytes), SensorMeasurement.class);
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Error reading bytes", e);
 		}
@@ -56,12 +56,12 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 
 	}
 
-	private static class KryoInternalSerializer extends com.esotericsoftware.kryo.Serializer<Row> {
+	private static class KryoInternalSerializer extends com.esotericsoftware.kryo.Serializer<SensorMeasurement> {
 		@Override
-		public void write(Kryo kryo, Output output, Row row) {
+		public void write(Kryo kryo, Output output, SensorMeasurement row) {
 
-			if (row instanceof Row1D) {
-				Row1D cast = (Row1D) row;
+			if (row instanceof SensorMeasurement1D) {
+				SensorMeasurement1D cast = (SensorMeasurement1D) row;
 				output.writeInt(MAGIC_NUMBER);
 				output.writeByte(row.getType());
 				output.writeInt(cast.getCoilId());
@@ -69,7 +69,7 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 				output.writeInt(cast.getVarName());
 				output.writeDouble(cast.getValue());
 			} else {
-				Row2D cast = (Row2D) row;
+				SensorMeasurement2D cast = (SensorMeasurement2D) row;
 				output.writeInt(MAGIC_NUMBER);
 				output.writeByte(row.getType());
 				output.writeInt(cast.getCoilId());
@@ -81,7 +81,7 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 		}
 
 		@Override
-		public Row read(Kryo kryo, Input input, Class<Row> clazz) {
+		public SensorMeasurement read(Kryo kryo, Input input, Class<SensorMeasurement> clazz) {
 			int magicNumber = input.readInt();
 			assert (magicNumber == MAGIC_NUMBER);
 
@@ -93,9 +93,9 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 			double value = input.readDouble();
 
 			if (is2D) {
-				return new Row2D(coilId, x, y, varId, value);
+				return new SensorMeasurement2D(coilId, x, y, varId, value);
 			} else {
-				return new Row1D(coilId, x, varId, value);
+				return new SensorMeasurement1D(coilId, x, varId, value);
 			}
 
 		}

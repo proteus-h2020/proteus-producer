@@ -7,14 +7,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HSMRecord {
+public class HSMMeasurement{
 
 	private Date timestamp;
 	private int coil;
 	private Map<String, Object> variables = new HashMap<String, Object>();
 	private int varCounter;
 
-	public HSMRecord(int coilID) {
+	public HSMMeasurement(int coilID) {
 		this.timestamp = new Date();
 		this.coil = coilID;
 		this.varCounter = 1;

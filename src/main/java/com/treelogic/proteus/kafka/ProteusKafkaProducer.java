@@ -1,6 +1,6 @@
 package com.treelogic.proteus.kafka;
 
-import com.treelogic.proteus.model.HSMRecord;
+import com.treelogic.proteus.model.HSMMeasurement;
 import com.treelogic.proteus.model.ProteusData;
 import com.treelogic.proteus.model.SensorMeasurement;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -46,7 +46,7 @@ public class ProteusKafkaProducer {
 		producer.send(new ProducerRecord<Integer, SensorMeasurement>(KAKFA_FLATNESS_TOPIC, row.getCoilId(), row));
 	}
 
-	public static void produceHSMRecord(HSMRecord record) {
+	public static void produceHSMRecord(HSMMeasurement record) {
 		logger.debug("Producing hsm : " + record);
 		// TODO: Finalize it
 		// producer.send(new ProducerRecord<Integer, ?>(KAKFA_HSM_TOPIC,

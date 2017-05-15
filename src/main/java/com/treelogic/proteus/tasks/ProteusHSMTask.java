@@ -29,13 +29,13 @@ public class ProteusHSMTask extends ProteusTask {
         Stream<String> stream = HDFS.readFile(this.hsmFilePath);
 
         stream
-                .map(HSMRecordMapper::map)
+                .map(HSMMeasurementMapper::map)
                 .filter(this::filterByCoil)
                 .forEach(ProteusKafkaProducer::produceHSMRecord);
         return null;
     }
 
-    private boolean filterByCoil(HSMRecord record) {
+    private boolean filterByCoil(HSMMeasurement record) {
         return record.getCoil() == coilId;
     }
 }

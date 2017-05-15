@@ -1,11 +1,11 @@
 package com.treelogic.proteus.hdfs;
 
-
-import com.treelogic.proteus.ProteusData;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+
+import com.treelogic.proteus.model.ProteusData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,43 +13,52 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.stream.Stream;
 
-/**
- * Created by ignacio.g.fernandez on 2/05/17.
- */
 public class HDFS {
-    public static String HDFS_URI;
-    private static Configuration conf = new Configuration();
-    private static FileSystem fs;
 
-    static {
-        conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
-        conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
-        HDFS_URI = (String) ProteusData.get("hdfs.baseUrl");
-        try {
-            fs = FileSystem.get(URI.create(HDFS.HDFS_URI), conf);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * HDFS Base URI
+	 */
+	public static String HDFS_URI;
 
-    public static  Stream<String> readFilesInParallel(String[] pathFiles){
-        Stream<String> stream = Stream.empty();
+	/**
+	 * Hadoop configuration instance
+	 */
+	private static Configuration conf = new Configuration();
 
-        for(String pathFile: pathFiles){
-            try {
-                Stream<String> s = HDFS.readFile(pathFile);
-                stream = Stream.concat(stream, s);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return stream;
-    }
+	/**
+	 * Hadoop filesystem pointer
+	 */
+	private static FileSystem fs;
 
-    public static Stream<String> readFile(String pathToFile) throws IOException {
-        Path path = new Path(HDFS_URI + pathToFile);
-        FSDataInputStream inputStream = fs.open(path);
-        BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
-        return buffer.lines().skip(1);
-    }
+	static {
+		conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+		conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
+		HDFS_URI = (String) ProteusData.get("hdfs.baseUrl");
+		try {
+			fs = FileSystem.get(URI.create(HDFS.HDFS_URI), conf);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static Stream<String> readFilesInParallel(String[] pathFiles) {
+		Stream<String> stream = Stream.empty();
+
+		for (String pathFile : pathFiles) {
+			try {
+				Stream<String> s = HDFS.readFile(pathFile);
+				stream = Stream.concat(stream, s);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return stream;
+	}
+
+	public static Stream<String> readFile(String pathToFile) throws IOException {
+		Path path = new Path(HDFS_URI + pathToFile);
+		FSDataInputStream inputStream = fs.open(path);
+		BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
+		return buffer.lines().skip(1);
+	}
 }

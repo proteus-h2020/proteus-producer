@@ -1,7 +1,10 @@
-package com.treelogic.proteus;
+package com.treelogic.proteus.tasks;
 
+import com.treelogic.proteus.Runner;
 import com.treelogic.proteus.hdfs.HDFS;
+import com.treelogic.proteus.kafka.ProteusKafkaProducer;
 import com.treelogic.proteus.model.AppModel;
+import com.treelogic.proteus.model.ProteusData;
 import com.treelogic.proteus.model.Row;
 import com.treelogic.proteus.model.RowMapper;
 import com.treelogic.proteus.utils.ListsUtils;
@@ -18,9 +21,6 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Stream;
 
-/**
- * Created by ignacio.g.fernandez on 3/05/17.
- */
 public class ProteusStreamingTask extends ProteusTask {
     /**
      * Path to the PROTEUS data
@@ -74,7 +74,7 @@ public class ProteusStreamingTask extends ProteusTask {
      * @return
      */
     private boolean filterFlatness(Row row) {
-        String varname = row.getVarName();
+        int varname = row.getVarName();
 
         if (ProteusData.FLATNESS_VARNAMES.contains(varname)) {
             this.model.getCurrentFlatnessRows().add(row); // Store flatness row
@@ -101,7 +101,6 @@ public class ProteusStreamingTask extends ProteusTask {
         } else if (row.getCoilId() == lastCoil.getCoilId()) {
             delay = this.calculateDelayBetweenCurrentAndLastRow(row);
         } else {
-            long timeTaken = (new Date().getTime() - this.model.getLastCoilStart().getTime());
             logger.info("COIL " + lastCoil.getCoilId() + " has finished. New coil: " + row.getCoilId());
             logger.info("----------------------------------------------------------");
             logger.info("Previous coil started at: " + this.model.getLastCoilStart());

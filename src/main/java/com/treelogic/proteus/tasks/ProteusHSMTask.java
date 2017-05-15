@@ -1,7 +1,9 @@
-package com.treelogic.proteus;
+package com.treelogic.proteus.tasks;
 
 import com.treelogic.proteus.hdfs.HDFS;
+import com.treelogic.proteus.kafka.ProteusKafkaProducer;
 import com.treelogic.proteus.model.*;
+
 import java.util.stream.Stream;
 
 

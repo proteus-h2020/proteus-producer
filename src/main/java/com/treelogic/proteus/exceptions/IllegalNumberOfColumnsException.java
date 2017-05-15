@@ -1,11 +1,10 @@
 package com.treelogic.proteus.exceptions;
 
-/**
- * Created by ignacio.g.fernandez on 2/05/17.
- */
 public class IllegalNumberOfColumnsException extends Exception {
 
-    public IllegalNumberOfColumnsException(String message) {
-        super(message);
-    }
+	private static final long serialVersionUID = -1022961137880815777L;
+
+	public IllegalNumberOfColumnsException(String message) {
+		super(message);
+	}
 }

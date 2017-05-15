@@ -19,10 +19,15 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 	private ThreadLocal<Kryo> kryos = new ThreadLocal<Kryo>() {
 		protected Kryo initialValue() {
 			Kryo kryo = new Kryo();
-			kryo.addDefaultSerializer(Row.class, new KryoInternalSerializer());
+			KryoInternalSerializer kryoInternal = new KryoInternalSerializer();
+			kryo.addDefaultSerializer(Row.class, kryoInternal);
+			kryo.addDefaultSerializer(Row1D.class, kryoInternal);
+			kryo.addDefaultSerializer(Row2D.class, kryoInternal);
 			return kryo;
 		};
 	};
+
+	private static final int MAGIC_NUMBER = 0x00687691; // PROTEUS EU id
 
 	@Override
 	public void configure(Map<String, ?> map, boolean b) {
@@ -30,16 +35,17 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 
 	@Override
 	public byte[] serialize(String s, Row row) {
-		ByteBufferOutput output = new ByteBufferOutput(50); // TODO Max size of the buffer. Optimise it.
+		ByteBufferOutput output = new ByteBufferOutput(50); // TODO Max size of
+															// the buffer.
+															// Optimise it.
 		kryos.get().writeObject(output, row);
 		return output.toBytes();
 	}
 
 	@Override
 	public Row deserialize(String topic, byte[] bytes) {
-		Class<? extends Row> clazz = topic.equals("1D") ? Row1D.class : Row2D.class;
 		try {
-			return kryos.get().readObject(new ByteBufferInput(bytes), clazz);
+			return kryos.get().readObject(new ByteBufferInput(bytes), Row.class);
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Error reading bytes", e);
 		}
@@ -56,7 +62,7 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 
 			if (row instanceof Row1D) {
 				Row1D cast = (Row1D) row;
-				output.writeInt(row.getMAGIC_NUMBER());
+				output.writeInt(MAGIC_NUMBER);
 				output.writeByte(row.getType());
 				output.writeInt(cast.getCoilId());
 				output.writeDouble(cast.getX());
@@ -64,7 +70,7 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 				output.writeDouble(cast.getValue());
 			} else {
 				Row2D cast = (Row2D) row;
-				output.writeInt(row.getMAGIC_NUMBER());
+				output.writeInt(MAGIC_NUMBER);
 				output.writeByte(row.getType());
 				output.writeInt(cast.getCoilId());
 				output.writeDouble(cast.getX());
@@ -74,36 +80,24 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<R
 			}
 		}
 
-		@SuppressWarnings("unused")
 		@Override
 		public Row read(Kryo kryo, Input input, Class<Row> clazz) {
-			Row instance = null;
-			try {
-				instance = clazz.newInstance();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			int magicNumber = input.readInt();
+			assert (magicNumber == MAGIC_NUMBER);
 
-			int MAGIC_NUMBER = input.readInt();
-			byte type = input.readByte();
-			
-			if (instance.getClass() == Row1D.class) {
+			boolean is2D = (input.readByte() == 0x0001f) ? true : false;
+			int coilId = input.readInt();
+			double x = input.readDouble();
+			double y = (is2D) ? input.readDouble() : 0;
+			int varId = input.readInt();
+			double value = input.readDouble();
 
-				int coilId = input.readInt();
-				double x = input.readDouble();
-				int var = input.readInt();
-				double value = input.readDouble();
-				return  new Row1D(coilId, x, var, value);
+			if (is2D) {
+				return new Row2D(coilId, x, y, varId, value);
 			} else {
-				int coilId = input.readInt();
-				double x = input.readDouble();
-				double y = input.readDouble();
-				int var = input.readInt();
-				double value = input.readDouble();
-				return new Row2D(coilId, x, y, var, value);
+				return new Row1D(coilId, x, varId, value);
 			}
+
 		}
 	}
 }

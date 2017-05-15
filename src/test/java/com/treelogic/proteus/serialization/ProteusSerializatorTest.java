@@ -30,7 +30,7 @@ public class ProteusSerializatorTest {
 		Row2D row = new Row2D(13, 31, 6, 54, 12.21);
 		byte[] bytes = this.kryo.serialize(null, row);
 
-		Row2D deserialized = (Row2D) this.kryo.deserialize("2D", bytes);
+		Row2D deserialized = (Row2D) this.kryo.deserialize(null, bytes);
 		assertEquals(row, deserialized);
 	}
 

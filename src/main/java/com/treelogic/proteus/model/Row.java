@@ -12,7 +12,7 @@ public abstract class Row {
 	protected double x;
 
 	public Row() {
-		this.type = this.getClass() == Row2D.class ? (byte) 0x01f : (byte) 0x00f;
+		this.type = this.getClass() == Row2D.class ? (byte) 0x0001f : (byte) 0x0000f;
 	}
 
 	public String toJson() {

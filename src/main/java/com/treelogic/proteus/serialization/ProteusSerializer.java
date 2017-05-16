@@ -62,18 +62,14 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<M
 
 	@Override
 	public Measurement deserialize(String topic, byte[] bytes) {
-		try {
-			if (topic.equals(ProteusData.get("kafka.topicName"))) {
-				return kryos.get().readObject(new ByteBufferInput(bytes), SensorMeasurement.class);
-			} else if (topic.equals(ProteusData.get("kafka.flatnessTopicName"))) {
-				return kryos.get().readObject(new ByteBufferInput(bytes), SensorMeasurement.class);
-			} else if (topic.equals(ProteusData.get("kafka.hsmTopicName"))) {
-				return kryos.get().readObject(new ByteBufferInput(bytes), HSMMeasurement.class);
-			} else {
-				throw new IllegalArgumentException("Illegal argument: " + topic);
-			}
-		} catch (Exception e) {
-			throw new IllegalArgumentException("Error reading bytes", e);
+		if (topic.equals(ProteusData.get("kafka.topicName"))) {
+			return kryos.get().readObject(new ByteBufferInput(bytes), SensorMeasurement.class);
+		} else if (topic.equals(ProteusData.get("kafka.flatnessTopicName"))) {
+			return kryos.get().readObject(new ByteBufferInput(bytes), SensorMeasurement.class);
+		} else if (topic.equals(ProteusData.get("kafka.hsmTopicName"))) {
+			return kryos.get().readObject(new ByteBufferInput(bytes), HSMMeasurement.class);
+		} else {
+			throw new IllegalArgumentException("Illegal argument: " + topic);
 		}
 	}
 

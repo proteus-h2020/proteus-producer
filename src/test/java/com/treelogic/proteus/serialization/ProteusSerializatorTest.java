@@ -43,7 +43,9 @@ public class ProteusSerializatorTest {
 	
 	@Test
 	public void testHSMSerializationAndDeserialization() {
-		HSMMeasurement record = new HSMMeasurement(313145);
+		int coilId = ThreadLocalRandom.current().nextInt(3000, 8000);
+		HSMMeasurement record = new HSMMeasurement(coilId);
+		
 		Map<String, Object> map = createFakeHSMValues();
 		record.setVariables(map);		
 		

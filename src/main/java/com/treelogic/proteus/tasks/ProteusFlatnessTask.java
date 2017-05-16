@@ -9,7 +9,7 @@ import java.util.List;
 public class ProteusFlatnessTask extends ProteusTask{
 	
     /**
-     * List of "coiltimeseries" records containg flatness values
+     * List of "coiltimeseries" records containing flatness values
      */
     private List<SensorMeasurement> flatnessRows;
 

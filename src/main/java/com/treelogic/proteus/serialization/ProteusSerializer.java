@@ -133,6 +133,7 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<M
 		@Override
 		public HSMMeasurement read(Kryo kryo, Input input, Class<HSMMeasurement> clazz) {
 			int coil = input.readInt();
+			@SuppressWarnings("unchecked")
 			Map<String, Object> variables = kryo.readObject(input, HashMap.class);
 			HSMMeasurement hsmRecord = new HSMMeasurement(coil);
 			hsmRecord.setVariables(variables);

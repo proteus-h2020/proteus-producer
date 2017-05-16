@@ -12,8 +12,6 @@ import com.treelogic.proteus.model.HSMMeasurement;
 import com.treelogic.proteus.model.SensorMeasurement1D;
 import com.treelogic.proteus.model.SensorMeasurement2D;
 
-import scala.util.Random;
-
 public class ProteusSerializatorTest {
 
 	private ProteusSerializer kryo;
@@ -25,7 +23,7 @@ public class ProteusSerializatorTest {
 
 	@Test
 	public void test1DSerializationAndDeserialization() {
-		SensorMeasurement1D row = new SensorMeasurement1D(1, 1, 56, 2121.31);
+		SensorMeasurement1D row = new SensorMeasurement1D(randomInt(), randomDouble(), randomVarIdentifier(), randomDouble());
 		byte[] bytes = this.kryo.serialize("proteus-realtime", row);
 
 		SensorMeasurement1D deserialized = (SensorMeasurement1D) this.kryo.deserialize("proteus-realtime", bytes);
@@ -34,7 +32,7 @@ public class ProteusSerializatorTest {
 
 	@Test
 	public void test2DSerializationAndDeserialization() {
-		SensorMeasurement2D row = new SensorMeasurement2D(13, 31, 6, 54, 12.21);
+		SensorMeasurement2D row = new SensorMeasurement2D(randomInt(), randomDouble(), randomDouble(), randomVarIdentifier(), randomDouble());
 		byte[] bytes = this.kryo.serialize("proteus-realtime", row);
 
 		SensorMeasurement2D deserialized = (SensorMeasurement2D) this.kryo.deserialize("proteus-realtime", bytes);
@@ -67,4 +65,14 @@ public class ProteusSerializatorTest {
 		return map;
 	}
 
+	private double randomDouble(){
+		return ThreadLocalRandom.current().nextDouble(0, 30000D);
+	}
+	
+	private int randomInt(){
+		return ThreadLocalRandom.current().nextInt(0, 2000);
+	}
+	private int randomVarIdentifier(){
+		return ThreadLocalRandom.current().nextInt(1, 54);
+	}
 }

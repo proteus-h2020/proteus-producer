@@ -1,9 +1,12 @@
-package com.treelogic.proteus;
+package com.treelogic.proteus.tasks;
 
+import com.treelogic.proteus.Runner;
 import com.treelogic.proteus.hdfs.HDFS;
+import com.treelogic.proteus.kafka.ProteusKafkaProducer;
 import com.treelogic.proteus.model.AppModel;
-import com.treelogic.proteus.model.Row;
-import com.treelogic.proteus.model.RowMapper;
+import com.treelogic.proteus.model.ProteusData;
+import com.treelogic.proteus.model.SensorMeasurement;
+import com.treelogic.proteus.model.SensorMeasurementMapper;
 import com.treelogic.proteus.utils.ListsUtils;
 
 
@@ -18,9 +21,6 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Stream;
 
-/**
- * Created by ignacio.g.fernandez on 3/05/17.
- */
 public class ProteusStreamingTask extends ProteusTask {
     /**
      * Path to the PROTEUS data
@@ -58,7 +58,7 @@ public class ProteusStreamingTask extends ProteusTask {
         Stream<String> stream = HDFS.readFile(this.filePath);
 
         stream
-                .map(RowMapper::map) // Convert string into a Row
+                .map(SensorMeasurementMapper::map) // Convert string into a Row
                 .filter(this::discardWrongCoilRows) //Discard wrong values
                 .filter(this::filterFlatness)
                 .peek(this::processCoilRow)
@@ -73,8 +73,8 @@ public class ProteusStreamingTask extends ProteusTask {
      * @param row A given coil row
      * @return
      */
-    private boolean filterFlatness(Row row) {
-        String varname = row.getVarName();
+    private boolean filterFlatness(SensorMeasurement row) {
+        int varname = row.getVarName();
 
         if (ProteusData.FLATNESS_VARNAMES.contains(varname)) {
             this.model.getCurrentFlatnessRows().add(row); // Store flatness row
@@ -89,10 +89,10 @@ public class ProteusStreamingTask extends ProteusTask {
      * @param row A given coil row
      * @return
      */
-    private Row processCoilRow(Row row) {
+    private SensorMeasurement processCoilRow(SensorMeasurement row) {
         this.model.setStatus(AppModel.ProductionStatus.PRODUCING);
 
-        Row lastCoil = this.model.getLastCoilRow();
+        SensorMeasurement lastCoil = this.model.getLastCoilRow();
         double delay = 0.0D;
 
         if (lastCoil == null) {
@@ -101,7 +101,6 @@ public class ProteusStreamingTask extends ProteusTask {
         } else if (row.getCoilId() == lastCoil.getCoilId()) {
             delay = this.calculateDelayBetweenCurrentAndLastRow(row);
         } else {
-            long timeTaken = (new Date().getTime() - this.model.getLastCoilStart().getTime());
             logger.info("COIL " + lastCoil.getCoilId() + " has finished. New coil: " + row.getCoilId());
             logger.info("----------------------------------------------------------");
             logger.info("Previous coil started at: " + this.model.getLastCoilStart());
@@ -136,7 +135,7 @@ public class ProteusStreamingTask extends ProteusTask {
     }
     
     private void handleFlatness(){
-        List<Row> flatnessCopy = ListsUtils.copy(this.model.getCurrentFlatnessRows());
+        List<SensorMeasurement> flatnessCopy = ListsUtils.copy(this.model.getCurrentFlatnessRows());
 
         //Produce Flatness variables
         if(flatnessCopy.size() > 0) {
@@ -159,7 +158,7 @@ public class ProteusStreamingTask extends ProteusTask {
      * @param currentRow current row
      * @return
      */
-    private double calculateDelayBetweenCurrentAndLastRow(Row currentRow) {
+    private double calculateDelayBetweenCurrentAndLastRow(SensorMeasurement currentRow) {
         return (currentRow.getX() - this.model.getLastCoilRow().getX())
                 * (ProteusData.COIL_TIME / ProteusData.getXmax(currentRow.getCoilId()));
     }
@@ -173,7 +172,7 @@ public class ProteusStreamingTask extends ProteusTask {
      *
      * @param row Current row
      */
-    private void updateStatus(Row row) {
+    private void updateStatus(SensorMeasurement row) {
         this.model.setLastCoilRow(row);
     }
 
@@ -182,12 +181,12 @@ public class ProteusStreamingTask extends ProteusTask {
      *
      * @param row
      */
-    private void produceMessage(Row row) {
+    private void produceMessage(SensorMeasurement row) {
         logger.debug("Producing row: " + row);
         ProteusKafkaProducer.produce(row);
     }
 
-    private boolean discardWrongCoilRows(Row row) {
+    private boolean discardWrongCoilRows(SensorMeasurement row) {
         return row != null && row.getX() > 0 && row.getCoilId() > 0;
     }
 

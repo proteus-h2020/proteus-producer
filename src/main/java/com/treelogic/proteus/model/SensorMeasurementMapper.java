@@ -3,18 +3,16 @@ package com.treelogic.proteus.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by ignacio.g.fernandez on 2/05/17.
- */
-public class RowMapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(RowMapper.class);
+public class SensorMeasurementMapper {
+
+    private static final Logger logger = LoggerFactory.getLogger(SensorMeasurementMapper.class);
 
 
-    public static Row map(String rowText) {
+    public static SensorMeasurement map(String rowText) {
         String[] columns = rowText.split(",");
         columns[0] = fixCoilName(columns[0]); //BUG - Some coilId are " ". Replace it by -1
-        Row row = null;
+        SensorMeasurement row = null;
         switch (columns.length) {
             case 5:
                 row = map2d(columns);
@@ -37,24 +35,27 @@ public class RowMapper {
         return coilName;
     }
 
-    private static Row map1d(String[] columns) {
-        return new Row1D(
+    private static SensorMeasurement map1d(String[] columns) {
+        return new SensorMeasurement1D(
                 Integer.parseInt(columns[0]),
                 Double.parseDouble(columns[1]),
-                columns[2],
+                parseVarIdentifier(columns[2]),
                 Double.parseDouble(columns[3])
         );
     }
 
-    private static Row map2d(String[] columns) {
-        return new Row2D(
+    private static SensorMeasurement map2d(String[] columns) {
+        return new SensorMeasurement2D(
                 Integer.parseInt(columns[0]),
                 Double.parseDouble(columns[1]),
                 Double.parseDouble(columns[2]),
-                columns[3],
+                parseVarIdentifier(columns[3]),
                 Double.parseDouble(columns[4])
         );
     }
 
+    private static int parseVarIdentifier(String varName){
+    	return Integer.parseInt(varName.split("C")[1]);
+    }
 
 }

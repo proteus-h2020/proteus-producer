@@ -192,7 +192,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
 				<configuration>
-					<mainClass>com.treelogic.proteus.Runner</mainClass>
+					<mainClass>eu.proteus.producer.Runner</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -1,7 +1,9 @@
-package com.treelogic.proteus;
+package eu.proteus.producer.tasks;
 
-import com.treelogic.proteus.hdfs.HDFS;
-import com.treelogic.proteus.model.*;
+import eu.proteus.producer.hdfs.HDFS;
+import eu.proteus.producer.kafka.ProteusKafkaProducer;
+import eu.proteus.producer.model.*;
+
 import java.util.stream.Stream;
 
 
@@ -27,13 +29,13 @@ public class ProteusHSMTask extends ProteusTask {
         Stream<String> stream = HDFS.readFile(this.hsmFilePath);
 
         stream
-                .map(HSMRecordMapper::map)
+                .map(HSMMeasurementMapper::map)
                 .filter(this::filterByCoil)
                 .forEach(ProteusKafkaProducer::produceHSMRecord);
         return null;
     }
 
-    private boolean filterByCoil(HSMRecord record) {
+    private boolean filterByCoil(HSMMeasurement record) {
         return record.getCoil() == coilId;
     }
 }

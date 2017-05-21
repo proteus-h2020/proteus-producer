@@ -1,4 +1,4 @@
-package com.treelogic.proteus;
+package eu.proteus.producer.tasks;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

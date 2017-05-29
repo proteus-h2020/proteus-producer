@@ -108,7 +108,7 @@ public class ProteusSerializer implements Closeable, AutoCloseable, Serializer<M
 			int magicNumber = input.readInt();
 			assert (magicNumber == MAGIC_NUMBER);
 
-			boolean is2D = (input.readByte() == 0x0001f) ? true : false;
+			boolean is2D = (input.readByte() == 0x0001) ? true : false;
 			int coilId = input.readInt();
 			double x = input.readDouble();
 			double y = (is2D) ? input.readDouble() : 0;

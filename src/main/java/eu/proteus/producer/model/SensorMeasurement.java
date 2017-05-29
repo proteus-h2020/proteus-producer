@@ -12,7 +12,12 @@ public abstract class SensorMeasurement extends Measurement{
 	protected double x;
 
 	public SensorMeasurement() {
-		this.type = this.getClass() == SensorMeasurement2D.class ? (byte) 0x0001f : (byte) 0x0000f;
+		if( this.getClass() == SensorMeasurement2D.class){
+			this.type = 0x1;
+		}
+		else{
+			this.type = 0x0;
+		}
 	}
 
 	public String toJson() {

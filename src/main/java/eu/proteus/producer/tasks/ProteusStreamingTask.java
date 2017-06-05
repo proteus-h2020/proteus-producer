@@ -1,5 +1,6 @@
 package eu.proteus.producer.tasks;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,13 @@ public class ProteusStreamingTask extends ProteusTask {
 	 * Path to the PROTEUS data
 	 */
 	private String filePath;
+
+	/**
+	 * Filter
+	 */
+
+	Integer[] discardValues = new Integer[] { 9, 19, 20, 22, 27, 31, 32, 36, 38, 39, 41, 45, 46, 47, 48, 49, 50, 51, 52,
+			53, 54, 55, 56 };
 
 	/**
 	 * A common logger
@@ -190,10 +198,8 @@ public class ProteusStreamingTask extends ProteusTask {
 	}
 
 	private boolean discardWrongCoilRows(SensorMeasurement row) {
-		return row != null && row.getX() > 0 && row.getCoilId() > 0 && row.getCoilId() < 45 && row.getCoilId() != 27
-				&& row.getCoilId() != 9 && row.getCoilId() != 19 && row.getCoilId() != 20 && row.getCoilId() != 22
-				&& row.getCoilId() != 31 && row.getCoilId() != 32 && row.getCoilId() != 36 && row.getCoilId() != 38
-				&& row.getCoilId() != 39 && row.getCoilId() != 41;
+		List<Integer> lista = Arrays.asList(discardValues);
+		return row != null && !lista.contains(row.getVarName()) && row.getX() > 0;
 	}
 
 	/**

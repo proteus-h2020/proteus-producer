@@ -56,7 +56,7 @@ You need also to create the abovementioned kafka topics. You can use the followi
 ## How to run it
 You can run the kafka producer in different ways. If you are using a terminal, please, run the following command.
 ```
-mvn exec:java
+nohup mvn exec:java &
 ```
 
 If you want to import and run the project into your prefered IDE (e.g. eclipse, intellij), you need to import the maven project and execute the `com.treelogic.proteus.Runner` class. 

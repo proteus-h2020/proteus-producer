@@ -56,6 +56,10 @@ You need also to create the abovementioned kafka topics. You can use the followi
 ## How to run it
 You can run the kafka producer in different ways. If you are using a terminal, please, run the following command.
 ```
+mvn exec:java 
+```
+If you want to run it in a production environmnets, the following command is recommended (run the producer as a background process):
+```
 nohup mvn exec:java &
 ```
 

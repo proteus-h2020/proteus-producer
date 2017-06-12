@@ -202,7 +202,7 @@ public class ProteusStreamingTask extends ProteusTask {
 
 	private boolean discardWrongCoilRows(SensorMeasurement row) {
 		return row != null && row.getX() > 0 && row.getCoilId() > 0
-				&& IgnorableCoilIdentifiers.get().contains(row.getVarName());
+				&& !IgnorableCoilIdentifiers.get().contains(row.getVarName());
 	}
 
 	/**

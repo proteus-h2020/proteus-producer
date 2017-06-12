@@ -107,7 +107,6 @@ public class ProteusStreamingTask extends ProteusTask {
 			logger.info("COIL " + lastCoil.getCoilId() + " has finished. New coil: " + row.getCoilId());
 			logger.info("----------------------------------------------------------");
 			logger.info("Previous coil ( "+ lastCoil.getCoilId() + " ) started at: " + this.model.getLastCoilStart());
-			
 			logger.info("Now: " + now);
 			
 			double minutes = (double)(now.getTime()-this.model.getLastCoilStart().getTime()) / (double)(60 * 1000) % 60;

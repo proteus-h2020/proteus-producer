@@ -5,23 +5,23 @@ import java.util.List;
 import eu.proteus.producer.kafka.ProteusKafkaProducer;
 import eu.proteus.producer.model.SensorMeasurement;
 
-/** @author Nacho <ignacio.g.fernandez@treelogic.com> */
+/** @author Treelogic */
 public class ProteusFlatnessTask extends ProteusTask {
 
-    /** List of "coiltimeseries" records containing flatness values */
+    /** List of "coiltimeseries" records containing flatness values. */
     private List<SensorMeasurement> flatnessRows;
 
     /** Method ProteusFlatnessTask().
      *
      * @param flatnessRows
      *            List with flatness rows. */
-    public ProteusFlatnessTask(List<SensorMeasurement> flatnessRows) {
+    public ProteusFlatnessTask(final List<SensorMeasurement> flatnessRowsList) {
         super();
-        this.flatnessRows = flatnessRows;
+        flatnessRows = flatnessRowsList;
     }
 
     @Override
-    public Void call() throws Exception {
+    public final Void call() throws Exception {
         this.flatnessRows.stream()
                 .forEach(ProteusKafkaProducer::produceFlatness);
         return null;

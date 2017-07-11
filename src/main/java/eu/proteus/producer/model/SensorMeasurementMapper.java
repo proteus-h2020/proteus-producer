@@ -3,18 +3,23 @@ package eu.proteus.producer.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** @author Nacho <ignacio.g.fernandez@treelogic.com> */
+/** @author Treelogic. */
 
-public class SensorMeasurementMapper {
+public final class SensorMeasurementMapper {
 
-    private static final Logger logger = LoggerFactory
+    /** Constructor. */
+    private SensorMeasurementMapper() {
+    }
+
+    /** Logger. */
+    private static final Logger LOGGER = LoggerFactory
             .getLogger(SensorMeasurementMapper.class);
 
     /** Method: map().
      *
      * @param rowText
      * @return */
-    public static SensorMeasurement map(String rowText) {
+    public static SensorMeasurement map(final String rowText) {
         String[] columns = rowText.split(",");
         columns[0] = fixCoilName(columns[0]); // BUG - Some coilId are " ".
                                               // Replace it by -1
@@ -27,10 +32,10 @@ public class SensorMeasurementMapper {
             row = map1d(columns);
             break;
         default:
-            logger.warn("Unkown number of columns: " + columns.length);
+            LOGGER.warn("Unkown number of columns: " + columns.length);
             return null;
         }
-        logger.debug("Current row: " + row);
+        LOGGER.debug("Current row: " + row);
         return row;
     }
 
@@ -38,7 +43,7 @@ public class SensorMeasurementMapper {
      *
      * @param coilName
      * @return */
-    private static String fixCoilName(String coilName) {
+    private static String fixCoilName(final String coilName) {
         if (coilName.trim().equals("")) {
             coilName = "-1";
         }
@@ -50,7 +55,7 @@ public class SensorMeasurementMapper {
      * @param columns
      *            String array with columns values.
      * @return SensorMeasurement1D object. */
-    private static SensorMeasurement map1d(String[] columns) {
+    private static SensorMeasurement map1d(final String[] columns) {
         return new SensorMeasurement1D(Integer.parseInt(columns[0]),
                 Double.parseDouble(columns[1]), parseVarIdentifier(columns[2]),
                 Double.parseDouble(columns[3]));
@@ -59,20 +64,20 @@ public class SensorMeasurementMapper {
     /** Method: map2d().
      *
      * @param columns
-     *            String array withe columns values.
+     *            String array with the columns values.
      * @return SensorMeasurement2D object. */
-    private static SensorMeasurement map2d(String[] columns) {
+    private static SensorMeasurement map2d(final String[] columns) {
         return new SensorMeasurement2D(Integer.parseInt(columns[0]),
                 Double.parseDouble(columns[1]), Double.parseDouble(columns[2]),
                 parseVarIdentifier(columns[3]), Double.parseDouble(columns[4]));
     }
 
-    /** Method: parseVarIdentifier()
+    /** Method: parseVarIdentifier().
      *
      * @param varName
      *            Variable name.
      * @return Variable name correctly formatted. */
-    private static int parseVarIdentifier(String varName) {
+    private static int parseVarIdentifier(final String varName) {
         return Integer.parseInt(varName.split("C")[1]);
     }
 

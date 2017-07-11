@@ -12,9 +12,13 @@ import java.util.Properties;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/** @author Nacho <ignacio.g.fernandez@treelogic.com> */
+/** @author Treelogic */
 
-public class ProteusData {
+public final class ProteusData {
+
+    /** Constructor. */
+    private ProteusData() {
+    }
 
     /** Time between coils. Obtained from the PROTEUS configuration file. */
     private static int timeBetweenCoils;
@@ -44,7 +48,7 @@ public class ProteusData {
     /** Method: getTimeBetweenCoils().
      *
      * @return */
-    public final int getTimeBetweenCoils() {
+    public static int getTimeBetweenCoils() {
         return timeBetweenCoils;
     }
 
@@ -58,7 +62,7 @@ public class ProteusData {
     /** Method: getCoilTime().
      *
      * @return */
-    public final int getCoilTime() {
+    public static int getCoilTime() {
         return coilTime;
     }
 

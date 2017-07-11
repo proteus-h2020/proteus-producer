@@ -57,7 +57,7 @@ public class HDFSSourceStrategy implements SourceStrategy {
     }
 
     /** Method: readFilesInParallel.
-     * 
+     *
      * @param pathFiles
      *            String Array with paths.
      * @return */

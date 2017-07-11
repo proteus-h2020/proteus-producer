@@ -1,6 +1,6 @@
 package eu.proteus.producer.model;
 
-/** @author Nacho <ignacio.g.fernandez@treelogic.com> */
+/** @author Treelogic */
 public class SensorMeasurement2D extends SensorMeasurement {
 
     /** Position Y. */

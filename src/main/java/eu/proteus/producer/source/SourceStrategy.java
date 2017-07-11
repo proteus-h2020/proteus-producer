@@ -12,5 +12,5 @@ public interface SourceStrategy<T> {
      *
      * @param filePath
      * @return */
-    public Stream<T> readFile(String filePath);
+    Stream<T> readFile(String filePath);
 }

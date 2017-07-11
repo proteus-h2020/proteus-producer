@@ -3,7 +3,7 @@ package eu.proteus.producer.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/** @author Nacho <ignacio.g.fernandez@treelogic.com> */
+/** @author Treelogic */
 
 public abstract class SensorMeasurement extends Measurement {
 

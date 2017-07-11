@@ -13,17 +13,35 @@ import org.apache.hadoop.fs.Path;
 
 import eu.proteus.producer.model.ProteusData;
 
-/** @author Nacho <ignacio.g.fernandez@treelogic.com> */
+/** @author Treelogic */
 
-public class HDFS {
+public final class HDFS {
 
-    /** HDFS Base URI */
-    public static String HDFS_URI;
+    /** Constructor. */
+    private HDFS() {
+    }
 
-    /** Hadoop configuration instance */
+    /** HDFS Base URI. */
+    private static String hdfsURI;
+
+    /** Method: getHDFSURI().
+     *
+     * @return */
+    public static String getHDFSURI() {
+        return hdfsURI;
+    }
+
+    /** Method: setDFSURI().
+     *
+     * @param hdfsdirection */
+    public static void setHDFSURI(final String hdfsdirection) {
+        hdfsURI = hdfsdirection;
+    }
+
+    /** Hadoop configuration instance. */
     private static Configuration conf = new Configuration();
 
-    /** Hadoop filesystem pointer */
+    /** Hadoop filesystem pointer. */
     private static FileSystem fs;
 
     static {
@@ -31,9 +49,9 @@ public class HDFS {
                 org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
         conf.set("fs.file.impl",
                 org.apache.hadoop.fs.LocalFileSystem.class.getName());
-        HDFS_URI = (String) ProteusData.get("hdfs.baseUrl");
+        setHDFSURI((String) ProteusData.get("hdfs.baseUrl"));
         try {
-            fs = FileSystem.get(URI.create(HDFS.HDFS_URI), conf);
+            fs = FileSystem.get(URI.create(getHDFSURI()), conf);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,7 +61,7 @@ public class HDFS {
      *
      * @param pathFiles
      * @return */
-    public static Stream<String> readFilesInParallel(String[] pathFiles) {
+    public static Stream<String> readFilesInParallel(final String[] pathFiles) {
         Stream<String> stream = Stream.empty();
 
         for (String pathFile : pathFiles) {
@@ -62,9 +80,9 @@ public class HDFS {
      * @param pathToFile
      * @return
      * @throws IOException */
-    public static Stream<String> readFile(String pathToFile)
+    public static Stream<String> readFile(final String pathToFile)
             throws IOException {
-        Path path = new Path(HDFS_URI + pathToFile);
+        Path path = new Path(getHDFSURI() + pathToFile);
         FSDataInputStream inputStream = fs.open(path);
         BufferedReader buffer = new BufferedReader(
                 new InputStreamReader(inputStream));

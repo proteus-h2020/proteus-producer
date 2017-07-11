@@ -6,13 +6,12 @@ import eu.proteus.producer.model.*;
 
 import java.util.stream.Stream;
 
-
 public class ProteusHSMTask extends ProteusTask {
     /**
      * Path to the PROTEUS HSM data
      */
     private String hsmFilePath;
-    
+
     /**
      * Coil ID for the current HSM
      */
@@ -28,9 +27,7 @@ public class ProteusHSMTask extends ProteusTask {
     public Void call() throws Exception {
         Stream<String> stream = HDFS.readFile(this.hsmFilePath);
 
-        stream
-                .map(HSMMeasurementMapper::map)
-                .filter(this::filterByCoil)
+        stream.map(HSMMeasurementMapper::map).filter(this::filterByCoil)
                 .forEach(ProteusKafkaProducer::produceHSMRecord);
         return null;
     }

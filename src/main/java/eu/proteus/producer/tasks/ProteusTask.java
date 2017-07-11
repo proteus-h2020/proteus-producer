@@ -6,17 +6,17 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
-
 public abstract class ProteusTask implements Callable<Void> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProteusTask.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(ProteusTask.class);
 
     protected Date taskStart;
 
-    public ProteusTask(){
+    public ProteusTask() {
         this.taskStart = new Date();
-        logger.info("Starting a new PROTEUS task: " + this.getClass().getName()+" at " +  this.taskStart);
+        logger.info("Starting a new PROTEUS task: " + this.getClass().getName()
+                + " at " + this.taskStart);
     }
-
 
 }

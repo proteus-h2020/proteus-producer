@@ -1,19 +1,29 @@
 package eu.proteus.producer.model;
 
-public class HSMMeasurementMapper {
+/** @author Treelogic */
 
-	private static final String SPLITTER = (String) ProteusData.get("model.hsm.splitter");
+public final class HSMMeasurementMapper {
 
-	public static HSMMeasurement map(String record) {
-		String[] lineSplit = record.split(SPLITTER);
-		int coilID = Integer.parseInt(lineSplit[0]);
+    /** Constructor. */
+    private HSMMeasurementMapper() {
+    }
 
-		HSMMeasurement hsmRecord = new HSMMeasurement(coilID);
+    /** Splitter symbol. */
+    private static final String SPLITTER = (String) ProteusData
+            .get("model.hsm.splitter");
 
-		for (String line : lineSplit) {
-			hsmRecord.put(line);
-		}
+    /** @param coilRecord
+     * @return */
+    public static HSMMeasurement map(final String coilRecord) {
+        String[] lineSplit = coilRecord.split(SPLITTER);
+        int coilID = Integer.parseInt(lineSplit[0]);
 
-		return hsmRecord;
-	}
+        HSMMeasurement hsmRecord = new HSMMeasurement(coilID);
+
+        for (String line : lineSplit) {
+            hsmRecord.put(line);
+        }
+
+        return hsmRecord;
+    }
 }

@@ -1,10 +1,12 @@
 package eu.proteus.producer.exceptions;
 
+/** @author Treelogic */
 public class IllegalNumberOfColumnsException extends Exception {
 
-	private static final long serialVersionUID = -1022961137880815777L;
+    /** serialVersionUID. */
+    private static final long serialVersionUID = -1022961137880815777L;
 
-	public IllegalNumberOfColumnsException(String message) {
-		super(message);
-	}
+    public IllegalNumberOfColumnsException(String message) {
+        super(message);
+    }
 }

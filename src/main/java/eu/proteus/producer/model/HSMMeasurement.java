@@ -1,92 +1,139 @@
 package eu.proteus.producer.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class HSMMeasurement extends Measurement{
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-	private int coil;
-	private Map<String, Object> variables = new HashMap<String, Object>();
-	private int varCounter;
+/** @author Treelogic */
 
-	public HSMMeasurement(int coilID) {
-		this.coil = coilID;
-		this.varCounter = 1;
-	}
+public class HSMMeasurement extends Measurement {
 
-	public HSMMeasurement(int coilID, Map<String, Object> variables){
-		this.coil = coilID;
-		this.varCounter = variables.size();
-		this.variables = variables;
-	}
-	public void put(Object value) {
-		String key = String.format("V%d", varCounter++);
-		this.variables.put(key, value);
-	}
+    /** Coil identifier. */
+    private int coil;
+    /** Map with the variables. */
+    private Map<String, Object> variables = new HashMap<String, Object>();
+    /** Counter of processed variables. */
+    private int varCounter;
 
-	public int getCoil() {
-		return coil;
-	}
+    /** Constructor.
+     *
+     * @param coilID
+     *            Coil identifier. */
+    public HSMMeasurement(final int coilID) {
+        this.coil = coilID;
+        this.varCounter = 1;
+    }
 
-	public void setCoil(int coil) {
-		this.coil = coil;
-	}
+    /** Constructor.
+     *
+     * @param coilID
+     *            Coil identifier.
+     * @param mapVariables
+     *            Variables to consider. */
+    public HSMMeasurement(final int coilID,
+            final Map<String, Object> mapVariables) {
+        coil = coilID;
+        varCounter = variables.size();
+        variables = mapVariables;
+    }
 
-	public Map<String, Object> getVariables() {
-		return variables;
-	}
+    /** Method: put().
+     *
+     * @param value
+     *            Variable to include. */
+    public final void put(final Object value) {
+        String key = String.format("V%d", varCounter++);
+        variables.put(key, value);
+    }
 
-	public void setVariables(Map<String, Object> variables) {
-		this.variables = variables;
-	}
+    /** Method: getCoil().
+     *
+     * @return */
+    public final int getCoil() {
+        return coil;
+    }
 
-	public String toJson() {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			return mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    /** Method. setCoil().
+     *
+     * @param coilid
+     *            Coil identifier. */
+    public final void setCoil(final int coilid) {
+        coil = coilid;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + coil;
-		result = prime * result + varCounter;
-		result = prime * result + ((variables == null) ? 0 : variables.hashCode());
-		return result;
-	}
+    /** Method: getVariables().
+     *
+     * @return Map with all the variables of the coil. */
+    public final Map<String, Object> getVariables() {
+        return variables;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HSMMeasurement other = (HSMMeasurement) obj;
-		if (coil != other.coil)
-			return false;
-		if (varCounter != other.varCounter)
-			return false;
-		if (variables == null) {
-			if (other.variables != null)
-				return false;
-		} else if (!variables.equals(other.variables))
-			return false;
-		return true;
-	}
+    /** Method: setVariables().
+     *
+     * @param mapVariables
+     *            Map with all the variables of the coil. */
+    public final void setVariables(final Map<String, Object> mapVariables) {
+        variables = mapVariables;
+    }
 
-	@Override
-	public String toString() {
-		return "HSMMeasurement [coil=" + coil + ", variables=" + variables + ", varCounter=" + varCounter + "]";
-	}
-		
+    /** Method: toJson().
+     *
+     * @return */
+    public final String toJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public final int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + coil;
+        result = prime * result + varCounter;
+        result = prime * result
+                + ((variables == null) ? 0 : variables.hashCode());
+        return result;
+    }
+
+    @Override
+    public final boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        HSMMeasurement other = (HSMMeasurement) obj;
+        if (coil != other.coil) {
+            return false;
+        }
+        if (varCounter != other.varCounter) {
+            return false;
+        }
+        if (variables == null) {
+            if (other.variables != null) {
+                return false;
+            }
+        } else if (!variables.equals(other.variables)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public final String toString() {
+        return "HSMMeasurement [coil=" + coil + ", variables=" + variables
+                + ", varCounter=" + varCounter + "]";
+    }
+
 }

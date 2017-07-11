@@ -4,17 +4,29 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/** @author Nacho <ignacio.g.fernandez@treelogic.com> */
+
 public class AppModel {
 
+    /** Current coil identifier. */
     private Integer aliveCoil;
+
+    /** Last coil row. */
     private SensorMeasurement lastCoilRow;
+
+    /** Start timestamp of the last coil. */
     private Date lastCoilStart;
+
+    /** Production status. */
     private ProductionStatus status;
 
+    /** Current rows. */
     private List<SensorMeasurement> currentFlatnessRows;
 
+    /** Delay between coils production start. */
     private double delay;
 
+    /** Constructor. */
     public AppModel() {
         this.aliveCoil = null;
         this.status = ProductionStatus.AWAITING;
@@ -23,57 +35,101 @@ public class AppModel {
         this.currentFlatnessRows = new ArrayList<SensorMeasurement>();
     }
 
-
-    public Integer getAliveCoil() {
+    /** Method: getAliveCoil().
+     *
+     * @return */
+    public final Integer getAliveCoil() {
         return aliveCoil;
     }
 
-    public void setAliveCoil(Integer aliveCoil) {
-        this.aliveCoil = aliveCoil;
+    /** Method: setAliveCoil().
+     *
+     * @param currentCoilID
+     *            Coil identifier. */
+    public final void setAliveCoil(final Integer currentCoilID) {
+        aliveCoil = currentCoilID;
     }
 
-
-    public ProductionStatus getStatus() {
+    /** Method: getStatus().
+     *
+     * @return */
+    public final ProductionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ProductionStatus status) {
-        this.status = status;
+    /** Method setStatus().
+     *
+     * @param productionStatus
+     *            Production status. */
+    public final void setStatus(final ProductionStatus productionStatus) {
+        status = productionStatus;
     }
 
-    public double getDelay() {
+    /** Method: getDelay().
+     *
+     * @return */
+    public final double getDelay() {
         return delay;
     }
 
-    public void setDelay(double delay) {
-        this.delay = delay;
+    /** Method: setDelay().
+     *
+     * @param delayTime
+     *            Set delay time. */
+    public final void setDelay(final double delayTime) {
+        delay = delayTime;
     }
 
-    public SensorMeasurement getLastCoilRow() {
+    /** Method: getLastCoilRow().
+     *
+     * @return */
+    public final SensorMeasurement getLastCoilRow() {
         return lastCoilRow;
     }
 
-    public void setLastCoilRow(SensorMeasurement lastCoilRow) {
-        this.lastCoilRow = lastCoilRow;
+    /** Method setLastCoilRow().
+     *
+     * @param lastRow
+     *            Last coil row received. */
+    public final void setLastCoilRow(final SensorMeasurement lastRow) {
+        lastCoilRow = lastRow;
     }
 
-    public Date getLastCoilStart() {
+    /** Method: getLastCoilStart().
+     *
+     * @return */
+    public final Date getLastCoilStart() {
         return lastCoilStart;
     }
 
-    public void setLastCoilStart(Date lastCoilStart) {
-        this.lastCoilStart = lastCoilStart;
+    /** Method setLastCoilStart().
+     *
+     * @param lastCoilBegin
+     *            Date of the last coil production start. */
+    public final void setLastCoilStart(final Date lastCoilBegin) {
+        lastCoilStart = lastCoilBegin;
     }
 
-    public List<SensorMeasurement> getCurrentFlatnessRows() {
+    /** Method: getCurrentFlatnessRows().
+     *
+     * @return */
+    public final List<SensorMeasurement> getCurrentFlatnessRows() {
         return currentFlatnessRows;
     }
 
-    public void setCurrentFlatnessRows(List<SensorMeasurement> currentFlatnessRows) {
-        this.currentFlatnessRows = currentFlatnessRows;
+    /** Method: setCurrentFlatnessRow.
+     *
+     * @param currentFlatness
+     *            List with the current flatness rows. */
+    public final void setCurrentFlatnessRows(
+            final List<SensorMeasurement> currentFlatness) {
+        currentFlatnessRows = currentFlatness;
     }
 
+    /** @author Nacho <ignacio.g.fernandez@treelogic.com> */
     public enum ProductionStatus {
+        /** Status available: PRODUCTION: Coil in production. AWAITING: Coil
+         * awaiting to be on production. */
         PRODUCING, AWAITING
     }
 }

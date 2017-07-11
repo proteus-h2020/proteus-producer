@@ -1,74 +1,131 @@
 package eu.proteus.producer.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/** @author Nacho <ignacio.g.fernandez@treelogic.com> */
 
 public class ProteusData {
 
-	/**
-	 * Time between coils. Obtained from the PROTEUS configuration file
-	 */
-	public static int TIME_BETWEEN_COILS;
+    /** Time between coils. Obtained from the PROTEUS configuration file. */
+    private static int timeBetweenCoils;
 
-	/**
-	 * Coil time. Obtained from the PROTEUS configuration file
-	 */
-	public static int COIL_TIME;
+    /** Coil time. Obtained from the PROTEUS configuration file */
+    private static int coilTime;
 
-	/**
-	 * Mapping between COIL_ID and its x maximum value. Obtained from the PROTEUS-maxX.json file
-	 */
-	private static Map<?, ?> coil_xMax = new HashMap<String, String>();
+    /** Mapping between COIL_ID and its x maximum value. Obtained from the
+     * PROTEUS-maxX.json file */
+    private static Map<?, ?> coilxMax = new HashMap<String, String>();
 
-	/**
-	 * Pointer to the PROTEUS properties object
-	 */
-	private static Properties properties;
+    /** Pointer to the PROTEUS properties object. */
+    private static Properties properties;
 
-	/**
-	 * List of flatness variable names
-	 */
-	public static List<Integer> FLATNESS_VARNAMES = Arrays.asList(42, 28, 11);
+    /** List of flatness variable names. */
+    private static List<Integer> flatnessVarNames = Arrays.asList(42, 28, 11);
 
-	static {
-		properties = new Properties();
-		try {
-			properties.load(ProteusData.class.getClassLoader().getResource("config.properties").openStream());
-			TIME_BETWEEN_COILS = Integer.parseInt((String) ProteusData.get("model.timeBetweenCoils"));
-			COIL_TIME = Integer.parseInt((String) ProteusData.get("model.coilTime"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static Object get(String property) {
-		return properties.get("com.treelogic.proteus." + property);
-	}
+    /** Getters and Setters */
 
-	public static Double getXmax(int coil) {
-		String coilString = String.valueOf(coil);
-		Double maxX = Double.parseDouble(String.valueOf(coil_xMax.get(coilString)));
-		return maxX;
-	}
+    /** Method: setTimeBetweenCoils().
+     *
+     * @param time */
+    public static void setTimeBetweenCoils(final int time) {
+        timeBetweenCoils = time;
+    }
 
-	public static void loadData() {
-		ClassLoader classLoader = ProteusData.class.getClassLoader();
-		String json = null;
-		try {
-			json = new String(Files.readAllBytes(Paths.get(classLoader.getResource("PROTEUS-maxX.json").toURI())));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		try {
-			coil_xMax = new ObjectMapper().readValue(json, HashMap.class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    /** Method: getTimeBetweenCoils().
+     *
+     * @return */
+    public final int getTimeBetweenCoils() {
+        return timeBetweenCoils;
+    }
+
+    /** Method: setCoilTime().
+     *
+     * @param time */
+    public static void setCoilTime(final int time) {
+        coilTime = time;
+    }
+
+    /** Method: getCoilTime().
+     *
+     * @return */
+    public final int getCoilTime() {
+        return coilTime;
+    }
+
+    /** Method: setFlatnessVarName().
+     *
+     * @param list */
+    public static void setFlatnessVarName(final List<Integer> list) {
+        flatnessVarNames = list;
+    }
+
+    /** Method. getFlatnessVarName().
+     *
+     * @return */
+    public static List<Integer> getFlatnessVarName() {
+        return flatnessVarNames;
+    }
+
+    static {
+        properties = new Properties();
+        try {
+            properties.load(ProteusData.class.getClassLoader()
+                    .getResource("config.properties").openStream());
+            setTimeBetweenCoils(Integer.parseInt(
+                    (String) ProteusData.get("model.timeBetweenCoils")));
+            setCoilTime(Integer
+                    .parseInt((String) ProteusData.get("model.coilTime")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** Method get().
+     *
+     * @param property
+     * @return */
+    public static Object get(final String property) {
+        return properties.get("com.treelogic.proteus." + property);
+    }
+
+    /** Method getXmax().
+     *
+     * @param coil
+     *            Coil identifier.
+     * @return */
+    public static Double getXmax(final int coil) {
+        String coilString = String.valueOf(coil);
+        Double maxX = Double
+                .parseDouble(String.valueOf(coilxMax.get(coilString)));
+        return maxX;
+    }
+
+    /** Method loadData(). */
+    public static void loadData() {
+        ClassLoader classLoader = ProteusData.class.getClassLoader();
+        String json = null;
+        try {
+            json = new String(Files.readAllBytes(Paths.get(
+                    classLoader.getResource("PROTEUS-maxX.json").toURI())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        try {
+            coilxMax = new ObjectMapper().readValue(json, HashMap.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

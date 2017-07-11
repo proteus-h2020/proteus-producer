@@ -3,111 +3,160 @@ package eu.proteus.producer.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class SensorMeasurement extends Measurement{
+/** @author Treelogic */
 
-	protected int coilId;
-	protected int varName;
-	protected double value;
-	protected byte type;
-	protected double x;
+public abstract class SensorMeasurement extends Measurement {
 
-	public SensorMeasurement() {
-		if( this.getClass() == SensorMeasurement2D.class){
-			this.type = 0x1;
-		}
-		else{
-			this.type = 0x0;
-		}
-	}
+    /** Coil identifier. */
+    private int coilId;
+    /** Variable name. */
+    private int varName;
+    /** Vale for sensor. */
+    private double value;
+    /** Type of sensor. */
+    private byte type;
+    /** Position x. */
+    private double x;
 
-	public String toJson() {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			return mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    /** Constructor: SensorMeasurement(). */
+    public SensorMeasurement() {
+        if (this.getClass() == SensorMeasurement2D.class) {
+            this.type = 0x1;
+        } else {
+            this.type = 0x0;
+        }
+    }
 
-	public int getCoilId() {
-		return coilId;
-	}
+    /** Method: toJson().
+     *
+     * @return */
+    public final String toJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	public void setCoilId(int coilId) {
-		this.coilId = coilId;
-	}
+    /** Method: getCoilId().
+     *
+     * @return */
+    public final int getCoilId() {
+        return coilId;
+    }
 
-	public int getVarName() {
-		return varName;
-	}
+    /** Method: setCoilId().
+     *
+     * @param coilidentifier
+     *            Coil identifier. */
+    public final void setCoilId(final int coilidentifier) {
+        coilId = coilidentifier;
+    }
 
-	public void setVarName(int varName) {
-		this.varName = varName;
-	}
+    /** Method: getVarName().
+     *
+     * @return */
+    public final int getVarName() {
+        return varName;
+    }
 
-	public double getValue() {
-		return value;
-	}
+    /** Method: setVarName().
+     *
+     * @param variablevalue
+     *            Variable name. */
+    public final void setVarName(final int variablevalue) {
+        varName = variablevalue;
+    }
 
-	public double getX() {
-		return x;
-	}
+    /** Method: getValue().
+     *
+     * @return */
+    public final double getValue() {
+        return value;
+    }
 
-	public void setX(double x) {
-		this.x = x;
-	}
+    /** Method: getX().
+     *
+     * @return X position. */
+    public final double getX() {
+        return x;
+    }
 
-	public void setValue(double value) {
-		this.value = value;
-	}
+    /** Method: setX().
+     *
+     * @param positionx
+     *            X position. */
+    public final void setX(final double positionx) {
+        x = positionx;
+    }
 
-	public byte getType() {
-		return type;
-	}
+    /** Method: setValue(double).
+     *
+     * @param positionvalue
+     *            Value for the specific position. */
+    public final void setValue(final double positionvalue) {
+        value = positionvalue;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + coilId;
-		result = prime * result + type;
-		long temp;
-		temp = Double.doubleToLongBits(value);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + varName;
-		temp = Double.doubleToLongBits(x);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
+    /** Method: getType().
+     *
+     * @return byte which identifies the row as 1D or 2D. */
+    public final byte getType() {
+        return type;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SensorMeasurement other = (SensorMeasurement) obj;
-		if (coilId != other.coilId)
-			return false;
-		if (type != other.type)
-			return false;
-		if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value))
-			return false;
-		if (varName != other.varName)
-			return false;
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
-			return false;
-		return true;
-	}
+    @Override
+    public final int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + coilId;
+        result = prime * result + type;
+        long temp;
+        temp = Double.doubleToLongBits(value);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + varName;
+        temp = Double.doubleToLongBits(x);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "Row [coilId=" + coilId + ", varName=" + varName + ", value=" + value + ", type=" + type + ", x=" + x
-				+ "]";
-	}
+    @Override
+    public final boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        SensorMeasurement other = (SensorMeasurement) obj;
+        if (coilId != other.coilId) {
+            return false;
+        }
+        if (type != other.type) {
+            return false;
+        }
+        if (Double.doubleToLongBits(value) != Double
+                .doubleToLongBits(other.value)) {
+            return false;
+        }
+        if (varName != other.varName) {
+            return false;
+        }
+        if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)) {
+            return false;
+        }
+        return true;
+    }
 
+    @Override
+    public final String toString() {
+        return "Row [coilId=" + coilId + ", varName=" + varName + ", value="
+                + value + ", type=" + type + ", x=" + x + "]";
+    }
 
 }

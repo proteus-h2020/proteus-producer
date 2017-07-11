@@ -1,76 +1,100 @@
 package eu.proteus.producer.model;
 
+/** @author Treelogic */
 public class SensorMeasurement2D extends SensorMeasurement {
 
-	private double y;
+    /** Position Y. */
+    private double y;
 
-	public SensorMeasurement2D() {
+    /** Constructor: SensorMeasuremente2D(). */
+    public SensorMeasurement2D() {
 
-	}
+    }
 
-	public SensorMeasurement2D(int coilId, double x, double y, int variableIdentifier, double value) {
-		super();
-		this.coilId = coilId;
-		this.x = x;
-		this.y = y;
-		this.varName = variableIdentifier;
-		this.value = value;
-	}
-	
-	public double getY() {
-		return y;
-	}
+    /** Constructur: SensorMeasurement2D(int, double, double, int, double).
+     *
+     * @param coilidentifier
+     *            Coil identifier.
+     * @param positionx
+     *            Position X.
+     * @param positiony
+     *            Position Y.
+     * @param variableid
+     *            Variable identifier.
+     * @param variablevalue
+     *            Vale for the tuple (x,y). */
+    public SensorMeasurement2D(final int coilidentifier, final double positionx,
+            final double positiony, final int variableid,
+            final double variablevalue) {
+        super();
+        coilId = coilidentifier;
+        x = positionx;
+        y = positiony;
+        varName = variableid;
+        value = variablevalue;
+    }
 
-	public void setY(double y) {
-		this.y = y;
-	}
+    /** Method: getY().
+     *
+     * @return */
+    public final double getY() {
+        return y;
+    }
 
-	@Override
-	public String toString() {
-		return super.toString() + " ----- Row2D [y=" + y + "]";
-	}
+    /** Method: setY().
+     *
+     * @param positiony
+     *            Position Y */
+    public final void setY(final double positiony) {
+        y = positiony;
+    }
 
-	public double getX() {
-		return x;
-	}
+    @Override
+    public final String toString() {
+        return super.toString() + " ----- Row2D [y=" + y + "]";
+    }
 
-	public void setX(double x) {
-		this.x = x;
-	}
+    @Override
+    public final double getX() {
+        return x;
+    }
 
+    @Override
+    public final void setX(final double positionx) {
+        x = positionx;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		long temp;
-		temp = Double.doubleToLongBits(x);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(y);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
+    @Override
+    public final int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (!(obj instanceof SensorMeasurement2D)) {
-			return false;
-		}
-		SensorMeasurement2D other = (SensorMeasurement2D) obj;
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)) {
-			return false;
-		}
-		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public final boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (!(obj instanceof SensorMeasurement2D)) {
+            return false;
+        }
+        SensorMeasurement2D other = (SensorMeasurement2D) obj;
+        if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y)) {
+            return false;
+        }
+        return true;
+    }
 
 }

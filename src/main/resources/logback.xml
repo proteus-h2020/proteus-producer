@@ -55,7 +55,7 @@
 	</appender>
 
 
-	<logger name="eu.proteus.producer" level="debug" additivity="false">
+	<logger name="eu.proteus.producer" level="info" additivity="false">
 		<appender-ref ref="FILE-AUDIT" />
 		<appender-ref ref="STDOUT" />
 	</logger>

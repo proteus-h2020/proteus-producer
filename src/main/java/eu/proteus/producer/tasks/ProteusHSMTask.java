@@ -4,38 +4,40 @@ import eu.proteus.producer.hdfs.HDFS;
 import eu.proteus.producer.kafka.ProteusKafkaProducer;
 import eu.proteus.producer.model.*;
 
+import java.io.IOException;
 import java.util.stream.Stream;
 
-
 public class ProteusHSMTask extends ProteusTask {
-    /**
-     * Path to the PROTEUS HSM data
-     */
-    private String hsmFilePath;
-    
-    /**
-     * Coil ID for the current HSM
-     */
-    private int coilId;
+	/**
+	 * Path to the PROTEUS HSM data
+	 */
+	private String hsmFilePath;
 
-    public ProteusHSMTask(String hsmFilePath, int coilId) {
-        super();
-        this.hsmFilePath = hsmFilePath;
-        this.coilId = coilId;
-    }
+	/**
+	 * Coil ID for the current HSM
+	 */
+	private int coilId;
 
-    @Override
-    public Void call() throws Exception {
-        Stream<String> stream = HDFS.readFile(this.hsmFilePath);
+	public ProteusHSMTask(String hsmFilePath, int coilId) {
+		super();
+		this.hsmFilePath = hsmFilePath;
+		this.coilId = coilId;
+	}
 
-        stream
-                .map(HSMMeasurementMapper::map)
-                .filter(this::filterByCoil)
-                .forEach(ProteusKafkaProducer::produceHSMRecord);
-        return null;
-    }
+	@Override
+	public void run() {
+		Stream<String> stream = null;
+		try {
+			stream = HDFS.readFile(this.hsmFilePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-    private boolean filterByCoil(HSMMeasurement record) {
-        return record.getCoil() == coilId;
-    }
+		stream.map(HSMMeasurementMapper::map).filter(this::filterByCoil)
+				.forEach(ProteusKafkaProducer::produceHSMRecord);
+	}
+
+	private boolean filterByCoil(HSMMeasurement record) {
+		return record.getCoil() == coilId;
+	}
 }

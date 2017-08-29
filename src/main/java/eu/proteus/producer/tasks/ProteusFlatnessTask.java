@@ -19,10 +19,9 @@ public class ProteusFlatnessTask extends ProteusTask{
     }
 
     @Override
-    public Void call() throws Exception {
+    public void run() {
         this.flatnessRows
                 .stream()
                 .forEach(ProteusKafkaProducer::produceFlatness);
-        return null;
     }
 }

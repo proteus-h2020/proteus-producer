@@ -151,8 +151,8 @@ public class ProteusStreamingTask extends ProteusTask {
 		String hsmFilePath = (String) ProteusData.get("hdfs.hsmPath");
 		//Future<?> f = new FutureTask<Object>(new ProteusHSMTask(hsmFilePath, coilId), null);
 		//service.submit(new ProteusHSMTask(hsmFilePath, coilId));
-		Thread thread = new Thread(new ProteusHSMTask(hsmFilePath, coilId));
-		thread.start();
+		//Thread thread = new Thread(new ProteusHSMTask(hsmFilePath, coilId));
+		//thread.start();
 	}
 
 	private void handleFlatness() {
@@ -161,7 +161,7 @@ public class ProteusStreamingTask extends ProteusTask {
 		// Produce Flatness variables
 		if (flatnessCopy.size() > 0) {
 			long flatnessDelay = Long.parseLong(ProteusData.get("model.flatnessDelay").toString());
-
+/**
 			Timer timer = new Timer();
 			TimerTask task = new TimerTask() {
 				@Override
@@ -172,6 +172,7 @@ public class ProteusStreamingTask extends ProteusTask {
 				}
 			};
 			timer.schedule(task, flatnessDelay);
+			**/
 		}
 	}
 

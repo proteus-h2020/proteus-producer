@@ -14,7 +14,7 @@ public class Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(Runner.class);
     
-    public static ExecutorService service = Executors.newFixedThreadPool(15); //Max parallelism = stream, hsm and flatness at once.
+    public static ExecutorService service = Executors.newCachedThreadPool(); //Max parallelism = stream, hsm and flatness at once.
 
     public static void main(String[] args) throws Exception {
         ExecutorService service = Runner.service;

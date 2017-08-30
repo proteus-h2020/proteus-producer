@@ -59,7 +59,7 @@ public class ProteusStreamingTask extends ProteusTask {
 	public void run() {
 		Stream<String> stream = null;
 		try {
-			stream = HDFS.readFile(this.filePath);
+			stream = HDFS.readFile(this.filePath, true);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

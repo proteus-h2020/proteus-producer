@@ -41,12 +41,12 @@ public class HDFS {
 		}
 	}
 
-	public static Stream<String> readFilesInParallel(String[] pathFiles) {
+	public static Stream<String> readFilesInParallel(String[] pathFiles, boolean skipHeader) {
 		Stream<String> stream = Stream.empty();
 
 		for (String pathFile : pathFiles) {
 			try {
-				Stream<String> s = HDFS.readFile(pathFile);
+				Stream<String> s = HDFS.readFile(pathFile, skipHeader);
 				stream = Stream.concat(stream, s);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -55,10 +55,10 @@ public class HDFS {
 		return stream;
 	}
 
-	public static Stream<String> readFile(String pathToFile) throws IOException {
+	public static Stream<String> readFile(String pathToFile, boolean skipHeader) throws IOException {
 		Path path = new Path(HDFS_URI + pathToFile);
 		FSDataInputStream inputStream = fs.open(path);
 		BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
-		return buffer.lines().skip(1);
+		return skipHeader ? buffer.lines().skip(1) : buffer.lines();
 	}
 }

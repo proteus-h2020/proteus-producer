@@ -28,8 +28,9 @@ public class ProteusHSMTask extends ProteusTask {
 	public void run() {
 		Stream<String> stream = null;
 		String fullpath = String.format(this.hsmFilePath, this.coilId);
+		System.out.println("Full path: " + fullpath);
 		try {
-			stream = HDFS.readFile(fullpath);
+			stream = HDFS.readFile(fullpath, false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

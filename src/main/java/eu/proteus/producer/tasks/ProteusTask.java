@@ -4,10 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.concurrent.Callable;
 
 
-public abstract class ProteusTask implements Callable<Void> {
+public abstract class ProteusTask implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(ProteusTask.class);
 

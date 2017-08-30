@@ -50,7 +50,8 @@ public class ProteusKafkaProducer {
 	}
 
 	public static void produceHSMRecord(HSMMeasurement record) {
-		logger.debug("Producing hsm : " + record);
+		
+		logger.info("Producing hsm : " + record);
 		producer.send(new ProducerRecord<Integer, Measurement>(KAKFA_HSM_TOPIC, record.getCoil(), record));
 	}
 }

@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 import java.util.stream.Stream;
 
 public class ProteusStreamingTask extends ProteusTask {
@@ -36,6 +34,8 @@ public class ProteusStreamingTask extends ProteusTask {
 	private static final Logger logger = LoggerFactory.getLogger(ProteusStreamingTask.class);
 
 	private AppModel model;
+	
+	private static ExecutorService service = Runner.service; 
 
 	/**
 	 * Constructor that receives an HDFS path that simulates streaming
@@ -148,10 +148,7 @@ public class ProteusStreamingTask extends ProteusTask {
 
 	private void handleHSM(int coilId) {
 		String hsmFilePath = (String) ProteusData.get("hdfs.hsmPath");
-		//Future<?> f = new FutureTask<Object>(new ProteusHSMTask(hsmFilePath, coilId), null);
-		//service.submit(new ProteusHSMTask(hsmFilePath, coilId));
-		Thread thread = new Thread(new ProteusHSMTask(hsmFilePath, coilId));
-		thread.start();
+		service.submit(new ProteusHSMTask(hsmFilePath, coilId));
 	}
 
 	private void handleFlatness() {
@@ -165,9 +162,7 @@ public class ProteusStreamingTask extends ProteusTask {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					Thread thread = new Thread(new ProteusFlatnessTask(flatnessCopy));
-					thread.start();
-					//service.submit(new ProteusFlatnessTask(flatnessCopy));
+					service.submit(new ProteusFlatnessTask(flatnessCopy));
 				}
 			};
 			timer.schedule(task, flatnessDelay);

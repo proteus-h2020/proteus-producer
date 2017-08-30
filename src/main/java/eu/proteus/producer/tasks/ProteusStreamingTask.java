@@ -13,6 +13,7 @@ import eu.proteus.producer.utils.ListsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,9 +33,9 @@ public class ProteusStreamingTask extends ProteusTask {
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(ProteusStreamingTask.class);
 
-	private static final ExecutorService service = Runner.service;
-
 	private AppModel model;
+	
+	private static ExecutorService service = Runner.service; 
 
 	/**
 	 * Constructor that receives an HDFS path that simulates streaming
@@ -55,13 +56,18 @@ public class ProteusStreamingTask extends ProteusTask {
 	 * @throws Exception
 	 */
 	@Override
-	public Void call() throws Exception {
-		Stream<String> stream = HDFS.readFile(this.filePath);
+	public void run() {
+		Stream<String> stream = null;
+		try {
+			stream = HDFS.readFile(this.filePath, true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		stream.map(SensorMeasurementMapper::map) // Convert string into a Row
 				.filter(this::discardWrongCoilRows) // Discard wrong values
 				.filter(this::filterFlatness).peek(this::processCoilRow).forEachOrdered(this::produceMessage);
-		return null;
 	}
 
 	/**
@@ -106,20 +112,20 @@ public class ProteusStreamingTask extends ProteusTask {
 			Date now = new Date();
 			logger.info("COIL " + lastCoil.getCoilId() + " has finished. New coil: " + row.getCoilId());
 			logger.info("----------------------------------------------------------");
-			logger.info("Previous coil ( "+ lastCoil.getCoilId() + " ) started at: " + this.model.getLastCoilStart());
-			
+			logger.info("Previous coil ( " + lastCoil.getCoilId() + " ) started at: " + this.model.getLastCoilStart());
+
 			logger.info("Now: " + now);
-			
-			double minutes = (double)(now.getTime()-this.model.getLastCoilStart().getTime()) / (double)(60 * 1000) % 60;
+
+			double minutes = (double) (now.getTime() - this.model.getLastCoilStart().getTime()) / (double) (60 * 1000)
+					% 60;
 			int expectedMinutes = (ProteusData.COIL_TIME / 1000) / 60;
-					
-			if(minutes > (expectedMinutes + 3)){
-				logger.warn("Coil ( "+ lastCoil.getCoilId() + " ) has taken " + minutes +" minutes");
+
+			if (minutes > (expectedMinutes + 3)) {
+				logger.warn("Coil ( " + lastCoil.getCoilId() + " ) has taken " + minutes + " minutes");
 			}
-			
+
 			logger.info("----------------------------------------------------------");
 
-			
 			delay = ProteusData.TIME_BETWEEN_COILS;
 
 			Calendar date = Calendar.getInstance();
@@ -137,7 +143,6 @@ public class ProteusStreamingTask extends ProteusTask {
 
 		this.applyDelay(delay);
 		this.updateStatus(row);
-
 		return row;
 	}
 

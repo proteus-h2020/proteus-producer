@@ -6,4 +6,5 @@
 target
 *.log
 target/
+bin/
 .DS_Store

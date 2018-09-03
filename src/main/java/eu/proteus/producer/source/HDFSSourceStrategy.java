@@ -13,6 +13,7 @@ import org.apache.hadoop.fs.Path;
 
 import eu.proteus.producer.model.ProteusData;
 
+@SuppressWarnings("rawtypes")
 public class HDFSSourceStrategy implements SourceStrategy {
 
 	/**

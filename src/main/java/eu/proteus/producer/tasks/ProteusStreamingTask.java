@@ -116,8 +116,7 @@ public class ProteusStreamingTask extends ProteusTask {
 
 			logger.info("Now: " + now);
 
-			double minutes = (double) (now.getTime() - this.model.getLastCoilStart().getTime()) / (double) (60 * 1000)
-					% 60;
+			double minutes = (double) (now.getTime() - this.model.getLastCoilStart().getTime()) / (double) (60 * 1000) % 60;
 			int expectedMinutes = (ProteusData.COIL_TIME / 1000) / 60;
 
 			if (minutes > (expectedMinutes + 3)) {
@@ -217,7 +216,7 @@ public class ProteusStreamingTask extends ProteusTask {
 	 * @param delay
 	 *            delay time
 	 */
-	public void applyDelay(double delay) {
+	private void applyDelay(double delay) {
 		if (delay > 7000D) { // avoid to much logs
 			logger.debug("Sleeping " + this.getClass().getName() + " for " + delay + "ms");
 		}

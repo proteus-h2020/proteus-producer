@@ -17,5 +17,4 @@ public abstract class ProteusTask implements Runnable {
         logger.info("Starting a new PROTEUS task: " + this.getClass().getName()+" at " +  this.taskStart);
     }
 
-
 }
